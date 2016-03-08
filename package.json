@@ -1,0 +1,29 @@
+{
+  "name": "danbooru",
+  "version": "0.0.1",
+  "description": "danbooru api wrapper",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "lsc -o lib src",
+
+    "pretest": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://stawberri@github.com/stawberri/danbooru-node.git"
+  },
+  "keywords": [
+    "danbooru",
+    "anime",
+    "image",
+    "api",
+    "wrapper"
+  ],
+  "author": "Pudding <aideen@aideen.pw> (https://aideen.pw)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stawberri/danbooru-node/issues"
+  },
+  "homepage": "https://github.com/stawberri/danbooru-node#readme"
+}
