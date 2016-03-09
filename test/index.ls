@@ -37,6 +37,13 @@ for method in <[get post put delete]>
     expected-parameters = {} <<< default-parameters <<< passed-parameters
 
     path = "a#{Math.random!}".replace /\./ \meow
+
+    path = switch method
+    | \get  => "/#{path}.json"
+    | \post => "#{path}.xml"
+    | \put  => "/#{path}"
+    | _     => path
+
     expected-path = "/#{path}.json"
 
     expected-results = "e#{Math.random!}": "ee#{Math.random!}"
@@ -53,24 +60,44 @@ for method in <[get post put delete]>
     e, data <- instance[method] path, passed-parameters, _
 
     t
-      ..error e
+      ..error e, 'no errors'
       ..same data, expected-results, 'request complete'
       ..same instance.default-parameters, default-parameters, 'no default poisoning'
 
-      ..does-not-throw n~done
+      ..does-not-throw n~done, 'all requests complete'
       ..end!
+    nock.clean-all!
 
 for error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
   tape "http error #{error}" (t) ->
+    expected-response = "e#{Math.random!}": "ee#{Math.random!}"
+
     n = nock danbooru-host
       .get \/.json
-      .reply error, success: false
+      .reply error, expected-response
 
     t.timeout-after 500
-    e, data <- index.get '', _
+    e, data <- index.get
 
     t
-      ..ok e instanceof Error
-      ..ok not data.success and data.message?
-      ..does-not-throw n~done
+      ..ok e instanceof Error, 'error generation'
+      ..same data, expected-response, 'body passing'
+      ..does-not-throw n~done, 'all requests complete'
       ..end!
+    nock.clean-all!
+
+tape "actual request: /posts.json" (t) ->
+  limit = 1 + Math.floor 5 * Math.random!
+
+  t.timeout-after 1000
+  e, data <- index.get 'posts' {limit}
+
+  t
+    ..error e, 'no errors'
+    ..is data.length, limit, 'actually retrieves expected number of posts'
+
+    post = data.0
+    ..ok post.id?, 'post contains id'
+    ..ok post.file_url?, 'post contains file url'
+
+    ..end!

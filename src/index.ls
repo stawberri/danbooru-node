@@ -40,7 +40,7 @@ module.exports = class exports
       stacktrace = stack-tracer do-request
 
       request do
-        {uri, method, [data-name]: data, +json}
+        {uri, method, (data-name): data, +json}
         (e, response, body) ->
           return callback e if e?
           unless response.status-code is 200
