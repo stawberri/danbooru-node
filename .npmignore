@@ -1,6 +1,6 @@
-lib
-# src
-# test
+# lib
+src
+test
 *.sublime*
 
 # Logs
