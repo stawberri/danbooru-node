@@ -7,7 +7,10 @@
     "build": "lsc -o lib src",
     "clean": "rm -rf lib",
 
-    "test": "livetape test/*.ls | faucet"
+    "test": "livetape test/*.ls | faucet",
+
+    "prepublish": "npm run build",
+    "postpublish": "npm run clean"
   },
   "repository": {
     "type": "git",
