@@ -1,14 +1,12 @@
 {
   "name": "danbooru",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "danbooru api wrapper",
   "main": "lib/index.js",
   "scripts": {
     "build": "lsc -o lib src",
     "clean": "rm -rf lib",
-
     "test": "livetape test/*.ls | faucet",
-
     "prepublish": "npm run build",
     "postpublish": "npm run clean"
   },
