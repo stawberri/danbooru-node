@@ -17,7 +17,7 @@ Then you just refer to [Danbooru's lovely api documentation](https://danbooru.do
 ## Making requests
 
 ```javascript
-Danbooru.get('posts', {limit: 5, tags: 'cat-ears'}, function(err, data) {
+Danbooru.get('posts', {limit: 5, tags: 'cat_ears'}, function(err, data) {
     if(err) throw err;
     console.log(data); // All of your cute kittehgirls!
 });
