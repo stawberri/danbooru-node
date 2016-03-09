@@ -1,7 +1,5 @@
 require! <[https request]>
 
-_=->it
-
 module.exports = class exports
   (params = {}, key) ->
     return new exports ... unless @ instanceof exports
@@ -62,7 +60,3 @@ module.exports = class exports
   put: (path, params, callback) -> do-request @, \PUT, true, ...optional_args ...
   delete: (path, params, callback) -> do-request @, \DELETE, true, ...optional_args ...
 |> -> it <<<< it!
-
-
-
-

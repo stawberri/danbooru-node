@@ -6,6 +6,7 @@
   "scripts": {
     "build": "lsc -o lib src",
     "clean": "rm -rf lib",
+
     "test": "livetape test/*.ls | faucet"
   },
   "repository": {
