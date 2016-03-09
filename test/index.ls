@@ -8,14 +8,6 @@ tape 'class instantiation' -> it
     ..ok key of index, "'#{key}' defined in module"
   ..end!
 
-tape 'method definitions' -> it
-  ..is typeof index.get, \function, 'get method'
-  ..is typeof index.post, \function, 'post method'
-  ..is typeof index.put, \function, 'put method'
-  ..is typeof index.delete, \function, 'delete method'
-  ..is typeof index.del, \function, 'del method'
-  ..end!
-
 tape 'default parameters' -> it
   ..ok index.default-parameters?, \defined
 
