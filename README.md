@@ -35,7 +35,6 @@ Perform a `GET` request on Danbooru's api!
 
 ### Danbooru.post(path, [params], [callback])
 Perform a `POST` request on Danbooru's api! As far as you needta be concerned, it works exactly like `GET`!
-* `params` _object_. Since these are now being sent in a request body, you can actually send files inside this object if you want to!
 
 ### Danbooru.put(path, [params], [callback])
 Perform a `PUT` request on Danbooru's api! Works exactly like `POST`!

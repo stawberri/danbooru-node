@@ -32,7 +32,7 @@ module.exports = class exports
   do-request = (self, method, body, path, params, callback) ->
     let @ = self
       data = {} <<< @default-parameters <<< params
-      data-name = if body then \form-data else \qs
+      data-name = if body then \form else \qs
       uri = parse-path path
 
       stacktrace = stack-tracer do-request
