@@ -29,7 +29,7 @@ module.exports = class exports
     Error.stack-trace-limit = limit
     stack.stack
   parse-path = -> "https://danbooru.donmai.us/#{(it is /^\/?(.*?)(?:\.(?:json|xml)|)$/).1}.json"
-  do-request = (self, method, body, path, params, callback) ->
+  do-request = (self, method, body, path, params, callback) !->
     let @ = self
       data = {} <<< @default-parameters <<< params
       data-name = if body then \form else \qs
@@ -46,7 +46,7 @@ module.exports = class exports
             error.stack = stacktrace
             return callback error, body
           callback void, body
-  optional_args = (path = '', params = {}, callback = -> throw it if it?) ->
+  optional_args = (path = '', params = {}, callback = ->) ->
     if typeof params isnt \object
       [params, callback] = [{}, params]
     if typeof path isnt \string

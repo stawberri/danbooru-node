@@ -30,13 +30,14 @@ tape 'default parameters' -> it
 
 danbooru-host = \https://danbooru.donmai.us/
 
-for method in <[get post put delete]>
+for let method in <[get post put delete]>
   tape "#{method} requests" (t) ->
     default-parameters = "d#{Math.random!}": "dd#{Math.random!}"
     passed-parameters = "p#{Math.random!}": "pp#{Math.random!}"
     expected-parameters = {} <<< default-parameters <<< passed-parameters
 
     path = "a#{Math.random!}".replace /\./ \meow
+    expected-path = "/#{path}.json"
 
     path = switch method
     | \get  => "/#{path}.json"
@@ -44,15 +45,14 @@ for method in <[get post put delete]>
     | \put  => "/#{path}"
     | _     => path
 
-    expected-path = "/#{path}.json"
-
     expected-results = "e#{Math.random!}": "ee#{Math.random!}"
 
     n = nock danbooru-host
     m = if method is \get
       n.get expected-path
+        .query expected-parameters
     else
-      n[method] expected-path, -> JSON.stringify it is JSON.stringify expected-parameters
+      n[method] expected-path, expected-parameters
     m.reply 200, expected-results
 
     t.timeout-after 500
@@ -68,7 +68,21 @@ for method in <[get post put delete]>
       ..end!
     nock.clean-all!
 
-for error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
+tape 'no return value' (t) ->
+  t.plan 2
+
+  n = nock danbooru-host
+    .get \/.json
+    .reply 200
+
+  t.timeout-after 500
+  return-value = index.get ->
+    t.does-not-throw n~done, 'all requests complete'
+    nock.clean-all!
+  t.not-ok return-value?
+
+
+for let error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
   tape "http error #{error}" (t) ->
     expected-response = "e#{Math.random!}": "ee#{Math.random!}"
 
@@ -80,7 +94,7 @@ for error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
     e, data <- index.get
 
     t
-      ..ok e instanceof Error, 'error generation'
+      ..ok ((error is 200) xor (e? && e instanceof Error)), 'error generation'
       ..same data, expected-response, 'body passing'
       ..does-not-throw n~done, 'all requests complete'
       ..end!
