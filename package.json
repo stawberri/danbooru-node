@@ -1,11 +1,12 @@
 {
   "name": "danbooru",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "danbooru api wrapper",
   "main": "lib/index.js",
   "scripts": {
     "build": "lsc -o lib src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf lib",
+    "test": "livetape test/*.ls | faucet"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,10 @@
   },
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
   "devDependencies": {
-    "livescript": "^1.4.0"
+    "faucet": "0.0.1",
+    "livescript": "^1.4.0",
+    "livetape": "^1.0.0",
+    "nock": "^7.2.2",
+    "tape": "^4.5.1"
   }
 }
