@@ -36,7 +36,7 @@ for let method in <[get post put delete]>
     passed-parameters = "p#{Math.random!}": "pp#{Math.random!}"
     expected-parameters = {} <<< default-parameters <<< passed-parameters
 
-    path = "a#{Math.random!}".replace /\./ \meow
+    path = "a#{Math.random!}"
     expected-path = "/#{path}.json"
 
     path = switch method
@@ -130,6 +130,40 @@ for let error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
       ..does-not-throw n~done, 'all requests complete'
       ..end!
     nock.clean-all!
+
+tape "request passthrough" (t) ->
+  request = index~request
+
+  address = "a#{Math.floor 5 * Math.random!}"
+  n1 = nock danbooru-host
+    .get "/#{address}"
+    .reply 200
+
+  t.timeout-after 500
+  <- request address
+  t
+    ..error it, 'no errors'
+    ..does-not-throw n1~done, 'strings are okay'
+
+  address = "a#{Math.floor 5 * Math.random!}"
+  n2 = nock danbooru-host
+    .get "/#{address}"
+    .reply 200
+  <- request url: address
+  t
+    ..error it, 'no errors'
+    ..does-not-throw n2~done, 'objects are okay'
+
+  address = "a#{Math.floor 5 * Math.random!}"
+  n3 = nock danbooru-host
+    .get "/#{address}"
+    .reply 200
+  <- request url: address, base-url: 'http://google.com'
+  t
+    ..error it, 'no errors'
+    ..does-not-throw n3~done, 'objects that mess up base-url are okay'
+    ..end!
+  nock.clean-all!
 
 tape "actual request: /posts.json" (t) ->
   limit = 1 + Math.floor 5 * Math.random!

@@ -1,5 +1,7 @@
 require! <[https request deep-extend args-js ./search ./util]>
 
+base-url = \https://danbooru.donmai.us/
+
 module.exports = class exports
   :: <<< search
 
@@ -22,7 +24,7 @@ module.exports = class exports
     500: '500 Internal Server Error: Some unknown error occurred on the server'
     503: '503 Service Unavailable: Server cannot currently handle the request, try again later'
 
-  parse-path = -> "https://danbooru.donmai.us/#{(it is /^\/?(.*?)(?:\.(?:json|xml)|)$/).1}.json"
+  parse-path = -> "#{base-url}#{(it is /^\/?(.*?)(?:\.(?:json|xml)|)$/).1}.json"
   do-request = (self, method, body, path, params, callback) !->
     stacktrace = util.stacktrace do-request
 
@@ -39,7 +41,7 @@ module.exports = class exports
             throw new Error danbooru-errors[response.status-code] unless response.status-code is 200
             callback void body
           catch
-            e.stack = stacktrace
+            e.stack = stacktrace if e.stack?
             callback e, body
   optional-args = ->
     stacktrace = util.stacktrace optional-args
@@ -55,11 +57,23 @@ module.exports = class exports
       ], &
       [path, params, callback]
     catch
-      e.stack = stacktrace
+      e.stack = stacktrace if e.stack?
       throw e
 
   get: (path, params, callback) -> do-request @, \GET, false, ...optional-args ...
   post: (path, params, callback) -> do-request @, \POST, true, ...optional-args ...
   put: (path, params, callback) -> do-request @, \PUT, true, ...optional-args ...
   delete: (path, params, callback) -> do-request @, \DELETE, true, ...optional-args ...
+
+  request: (options, callback) ->
+    options = switch typeof options
+    | \object => deep-extend {} options
+    | \string => url: options
+    | _       => url: ''
+    options <<< {base-url}
+
+    stacktrace = util.stacktrace
+    <- request options
+    &0.stack = stacktrace if &0?stack?
+    callback ...&
 |> -> it <<<< it!
