@@ -2,6 +2,7 @@
 src
 test
 *.sublime*
+.travis.yml
 
 # Logs
 logs
