@@ -30,22 +30,23 @@ module.exports = class exports
     stack.stack
   parse-path = -> "https://danbooru.donmai.us/#{(it is /^\/?(.*?)(?:\.(?:json|xml)|)$/).1}.json"
   do-request = (self, method, body, path, params, callback) !->
+    stacktrace = stack-tracer do-request
+
     let @ = self
       data = {} <<< @default-parameters <<< params
       data-name = if body then \form else \qs
       uri = parse-path path
 
-      stacktrace = stack-tracer do-request
-
       request do
         {uri, method, (data-name): data, +json}
         (e, response, body) ->
-          return callback e if e?
-          unless response.status-code is 200
-            error = new Error danbooru-errors[response.status-code]
-            error.stack = stacktrace
-            return callback error, body
-          callback void, body
+          try
+            throw e if e?
+            throw new Error danbooru-errors[response.status-code] unless response.status-code is 200
+            callback void, body
+          catch
+            e.stack = stacktrace
+            return callback e, body
   optional_args = (path = '', params = {}, callback = ->) ->
     if typeof params isnt \object
       [params, callback] = [{}, params]
