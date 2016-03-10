@@ -1,4 +1,4 @@
-require! <[https request]>
+require! <[https request deep-extend]>
 
 module.exports = class exports
   (params = {}, key) ->
@@ -8,7 +8,7 @@ module.exports = class exports
       @default-parameters = login: params
       @default-parameters.api_key = key if key?
     else
-      @default-parameters = {} <<< params
+      @default-parameters = deep-extend {} params
 
   danbooru-errors =
     204: '204 No Content: Request was successful'
@@ -33,7 +33,7 @@ module.exports = class exports
     stacktrace = stack-tracer do-request
 
     let @ = self
-      data = {} <<< @default-parameters <<< params
+      data = deep-extend {}, @default-parameters, params
       data-name = if body then \form else \qs
       uri = parse-path path
 
