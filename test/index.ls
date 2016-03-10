@@ -57,7 +57,7 @@ for let method in <[get post put delete]>
 
     t.timeout-after 500
     instance = index default-parameters
-    e, data <- instance[method] path, passed-parameters, _
+    e, data <- instance[method] path, passed-parameters
 
     t
       ..error e, 'no errors'
@@ -71,15 +71,45 @@ for let method in <[get post put delete]>
 tape 'no return value' (t) ->
   t.plan 2
 
-  n = nock danbooru-host
-    .get \/.json
-    .reply 200
-
+  nock danbooru-host
   t.timeout-after 500
-  return-value = index.get ->
-    t.does-not-throw n~done, 'all requests complete'
+  return-value = index.get \meow ->
+    t.pass!
     nock.clean-all!
   t.not-ok return-value?
+
+tape 'proper deep parameter handling' (t) ->
+  address = "#{Math.floor 5 * Math.random!}"
+
+  deep-object-key = "#{Math.random!}"
+  deep-object =
+    (deep-object-key):
+      "#{Math.random!}": "#{Math.random!}"
+      "#{Math.random!}": "#{Math.random!}"
+  deep-object-check = JSON.stringify deep-object
+  deep-object-modifier =
+    (deep-object-key):
+      "#{Math.random!}": "#{Math.random!}"
+      "#{Math.random!}": "#{Math.random!}"
+      "#{Math.random!}": "#{Math.random!}"
+      "#{Math.random!}": "#{Math.random!}"
+  deep-object-child = {} <<< deep-object[deep-object-key] <<< deep-object-modifier[deep-object-key]
+
+  n = nock danbooru-host
+    .get "/#{address}.json"
+    .query {(deep-object-key): deep-object-child}
+    .reply 200
+
+  instance = index deep-object
+
+  t.timeout-after 500
+  e, data <- instance.get address, deep-object-modifier
+
+  t
+    ..is (JSON.stringify instance.default-parameters), deep-object-check, 'same object as before'
+    ..does-not-throw n~done, 'all requests complete'
+    ..end!
+  nock.clean-all!
 
 
 for let error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
