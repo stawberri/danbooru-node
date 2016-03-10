@@ -1,4 +1,4 @@
-require! <[https request deep-extend]>
+require! <[https request deep-extend args-js]>
 
 module.exports = class exports
   (params = {}, key) ->
@@ -47,17 +47,25 @@ module.exports = class exports
           catch
             e.stack = stacktrace
             return callback e, body
-  optional_args = (path = '', params = {}, callback = ->) ->
-    if typeof params isnt \object
-      [params, callback] = [{}, params]
-    if typeof path isnt \string
-      [path, params] = ['', path]
-    if typeof params isnt \object
-      [params, callback] = [{}, params]
-    [path, params, callback]
+  optional-args = ->
+    stacktrace = stack-tracer optional-args
 
-  get: (path, params, callback) -> do-request @, \GET, false, ...optional_args ...
-  post: (path, params, callback) -> do-request @, \POST, true, ...optional_args ...
-  put: (path, params, callback) -> do-request @, \PUT, true, ...optional_args ...
-  delete: (path, params, callback) -> do-request @, \DELETE, true, ...optional_args ...
+    try
+      {path, params, callback} = args-js [
+        * path: args-js.STRING .|. args-js.Optional
+          _default: ''
+        * params: args-js.OBJECT .|. args-js.Optional
+          _default: {}
+        * callback: args-js.FUNCTION .|. args-js.Optional
+          _default: ->
+      ], &
+      [path, params, callback]
+    catch
+      e.stack = stacktrace
+      throw e
+
+  get: (path, params, callback) -> do-request @, \GET, false, ...optional-args ...
+  post: (path, params, callback) -> do-request @, \POST, true, ...optional-args ...
+  put: (path, params, callback) -> do-request @, \PUT, true, ...optional-args ...
+  delete: (path, params, callback) -> do-request @, \DELETE, true, ...optional-args ...
 |> -> it <<<< it!
