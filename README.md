@@ -32,9 +32,10 @@ Perform a http request on Danbooru's api!
     - `data` _object_. Parsing JSON output is an extra step, so you don't hafta do it! Here's an already-parsed object for you!
 
 ### Danbooru.request([options], [callback])
-A simple wrapper function for [request](https://www.npmjs.com/package/request), with `baseUrl` always set to Danbooru. Please refer to [their documentation](https://www.npmjs.com/package/request#requestoptions-callback) for details.
-* `options` _string_. _object_.
-* `callback` _function(err, response, body)_
+A simple wrapper function for [request](https://www.npmjs.com/package/request), with `baseUrl` always set to Danbooru. Refer to [their documentation](https://www.npmjs.com/package/request#requestoptions-callback) for details.
+* `options` _string_. _object_. A url or options for your request.
+* `callback` _function(err, response, body)_. Callback function.
+* **returns** _request_. Request object.
 
 I'm providing this to give you an easy way to download images and make custom requests without having to type Danbooru's url:
 
