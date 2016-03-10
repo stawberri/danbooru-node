@@ -91,8 +91,9 @@ export search = ->
             _default: ->
         ], &
 
+        my-params = deep-extend {}, params, page: 1
         stacktrace = util.stacktrace
-        e, data <- d-scope.search @tags + " #{tag-mod}", params
+        e, data <- d-scope.search @tags + " #{tag-mod}", my-params
         e.stack = stacktrace if e?
         callback e, data
 
@@ -113,8 +114,9 @@ export search = ->
 
         new-tags *= ' '
 
+        my-params = deep-extend {}, params, page: 1
         stacktrace = util.stacktrace
-        e, data <- d-scope.search new-tags, params
+        e, data <- d-scope.search new-tags, my-params
         e.stack = stacktrace if e?
         callback e, data
 

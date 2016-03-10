@@ -168,6 +168,7 @@ tape 'add adds tags' (t) ->
   e, data <- data.add extra-tags
 
   t
+    ..is data.page, 1, 'page reset properly'
     ..is data.tags, expected-tags, 'correct tags set'
     ..end!
 
@@ -202,6 +203,7 @@ tape 'tags are cleaned up' (t) ->
   e, data <- mock.search tags
 
   t
+    ..is data.page, 1, 'page reset properly'
     ..is data.tags, tags-expected
     ..end!
 
