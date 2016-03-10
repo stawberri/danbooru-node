@@ -1,10 +1,12 @@
-require! <[https request deep-extend args-js]>
+require! <[https request deep-extend args-js ./search ./util]>
 
 module.exports = class exports
+  :: <<< search
+
   (params = {}, key) ~>
     if typeof params is \string
       @default-parameters = login: params
-      @default-parameters.api_key = key if key?
+      @default-parameters.api_key = key if key? and typeof key is \string
     else
       @default-parameters = deep-extend {} params
 
@@ -20,15 +22,9 @@ module.exports = class exports
     500: '500 Internal Server Error: Some unknown error occurred on the server'
     503: '503 Service Unavailable: Server cannot currently handle the request, try again later'
 
-  stack-tracer = ->
-    stack = {}
-    [limit, Error.stack-trace-limit] = [Error.stack-trace-limit, Error.stack-trace-limit + 2]
-    Error.capture-stack-trace stack, it
-    Error.stack-trace-limit = limit
-    stack.stack
   parse-path = -> "https://danbooru.donmai.us/#{(it is /^\/?(.*?)(?:\.(?:json|xml)|)$/).1}.json"
   do-request = (self, method, body, path, params, callback) !->
-    stacktrace = stack-tracer do-request
+    stacktrace = util.stacktrace do-request
 
     let @ = self
       data = deep-extend {}, @default-parameters, params
@@ -41,12 +37,12 @@ module.exports = class exports
           try
             throw e if e?
             throw new Error danbooru-errors[response.status-code] unless response.status-code is 200
-            callback void, body
+            callback void body
           catch
             e.stack = stacktrace
-            return callback e, body
+            callback e, body
   optional-args = ->
-    stacktrace = stack-tracer optional-args
+    stacktrace = util.stacktrace optional-args
 
     try
       {path, params, callback} = args-js [

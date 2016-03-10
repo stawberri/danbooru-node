@@ -1,4 +1,4 @@
-require! <[tape nock ../src/index.ls]>
+require! <[tape ../src/index nock]>
 
 tape 'class instantiation' -> it
   instance = new index!
@@ -24,7 +24,7 @@ tape 'default parameters' -> it
   ..is (index user, key).default-parameters.api_key, key, 'saves keys properly'
 
   ..not-ok (index params, key).default-parameters.api_key?, 'no key saving with object'
-  ..not-ok (index void, key).default-parameters.api_key?, 'no key saving with void'
+  ..not-ok (index void key).default-parameters.api_key?, 'no key saving with void'
 
   ..end!
 
@@ -134,7 +134,7 @@ for let error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
 tape "actual request: /posts.json" (t) ->
   limit = 1 + Math.floor 5 * Math.random!
 
-  t.timeout-after 1000
+  t.timeout-after 5000
   e, data <- index.get 'posts' {limit}
 
   t
