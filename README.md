@@ -54,37 +54,33 @@ Save parameters for later. Returns a new Danbooru object that you can use to mak
 
 ## Searching
 
-"But wait," you say, "APIs are supposed to help make my life easier! Why do I still have to type so much?" Well, I made a helper function called `.search()` for you, and as a bonus, its data object even gives you extra helper functions to get around more easily!
+"But wait," you say, "APIs are supposed to help make my life easier! Why do I still have to type so much?" Well, I made a helper function called `.search()` for you, and as a bonus, its data object even gives you extra helper functions to get around more easily! The helper functions are also returned by `.search()`, so you can chain more nicely!
 
 ```javascript
 Danbooru.search('1girl fox_ears', function(err, page1) {
     if(err) throw err;
     console.log(page1); // Foxgirls!
-
-    page1.next(function(err, page2) {
+}).next(function(err, page2) {
+    if(err) throw err;
+    console.log(page2); // More foxgirls!
+    page2.next(function(err, page3) {
         if(err) throw err;
-        console.log(page2); // More foxgirls!
-
-        page2.next(function(err, page3) {
-            if(err) throw err;
-            console.log(page3); // So many foxgirls~ ♥
-        });
+        console.log(page3); // So many foxgirls~ ♥
     });
 });
 ```
 
-It might be a lot of callback nesting, but you can easily get around that with a nice package like [async](https://www.npmjs.com/package/async) or something that converts callbacks to promises, right? You might notice that I use LiveScript, which has a really nice way of dealing with callback nesting. I know some other languages have their own methods too, so you might wannya try one or some of them!
-
 ### Danbooru.search([tags], [params], [callback])
-Perform a search on Danbooru. A shortcut for `Danbooru.get('posts', {tags: tags, limit: 100, ...params}, callback)`, but also adds on extra methods to the data object you get. Visit [an api result](https://danbooru.donmai.us/posts.json?tags=fox_ears&limit=2) in your browser to inspect the data object returned.
+Perform a search on Danbooru. A shortcut for `Danbooru.get('posts', {tags: tags, limit: 100, ...params}, callback)`, but also adds on extra methods to the data object you get. Visit [an api result](https://danbooru.donmai.us/posts.json?tags=fox_ears&limit=2) in your browser to inspect the data object provided.
 * `tags` _string_. A space separated list of tags, and basically your Danbooru search query. You can try out your query visually on [Danbooru](https://danbooru.donmai.us/) or look up their [searching reference](https://danbooru.donmai.us/wiki_pages/43049) if you're not sure what to type.
 * `params` _object_. These are just parameters that will be directly passed to Danbooru's API. It will contain `limit: 100`
 by default, but you can change the number of posts you want by specifying it. Trying to specify `tags` won't do anything, because the `tags` parameter always overwrites the value of `tags` here, even if `tags` is empty or missing (which makes it default to empty).
 * `callback` _function(err, searchData)_ Do something after your request comes back.
     - `err` _Error_. Like always, an error object if there was one.
-    - `data` _Object_. Whatever Danbooru's API returns, but with some extra methods and properties. More details below!
+    - `searchData` _object_. Whatever Danbooru's API returns, but with some extra methods and properties. More details below!
+* **returns** _object_. Contains only my extra helper methods and properties from `searchData`. Also details below~
 
-### Danbooru.search -> callback -> data
+### Danbooru.search -> [callback] -> data
 Like I've said probably three times already, this data object is the one that Danbooru's api gives you, but with some nice helper functions! You can see sample API output by [visiting Danbooru](https://danbooru.donmai.us/posts.json?tags=fox_ears&limit=2). I haven't told you what the methods are yet, so~
 
 #### searchData.page

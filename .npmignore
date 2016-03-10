@@ -2,6 +2,7 @@
 src
 test
 *.sublime*
+.npmignore
 .travis.yml
 
 # Logs

@@ -36,13 +36,9 @@ export search = ->
     e.stack = stacktrace
     throw e
 
-  let d-scope = @
-    e, data <- d-scope.get \posts params
-    if e?
-      e.stack = stacktrace
-      return callback e, data
-
-    data <<<
+  var helpers
+  let self = @
+    helpers :=
       load: ->
         {page, callback} = args-js [
           * page: args-js.FLOAT .|. args-js.Optional
@@ -53,7 +49,7 @@ export search = ->
 
         my-params = deep-extend {}, params, {page}
         stacktrace = util.stacktrace
-        e, data <- d-scope.search @tags, my-params
+        e, data <- self.search @tags, my-params
         e.stack = stacktrace if e?
         callback e, data
 
@@ -93,7 +89,7 @@ export search = ->
 
         my-params = deep-extend {}, params, page: 1
         stacktrace = util.stacktrace
-        e, data <- d-scope.search @tags + " #{tag-mod}", my-params
+        e, data <- self.search @tags + " #{tag-mod}", my-params
         e.stack = stacktrace if e?
         callback e, data
 
@@ -116,11 +112,22 @@ export search = ->
 
         my-params = deep-extend {}, params, page: 1
         stacktrace = util.stacktrace
-        e, data <- d-scope.search new-tags, my-params
+        e, data <- self.search new-tags, my-params
         e.stack = stacktrace if e?
         callback e, data
 
+  helperify = ->
+    it <<< helpers <<<
       page:~ -> params.page
       tags:~ -> params.tags
 
+  @get \posts, params, (e, data) ->
+    if e?
+      e.stack = stacktrace
+      return callback e, data
+
+    helperify data
+
     callback void data
+
+  helperify {}

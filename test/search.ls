@@ -48,17 +48,19 @@ tape 'doesn\'t replace any properties' (t) ->
     get: (void,, callback) -> callback void {}
   }
 
+  var return-value
   callback = (e, received-data) ->
     require! \../src/index
     e, data <- index.get \posts
 
     t
       for key of received-data
-        ..not-ok key of data, "'#{key}' not in returned data"
+        ..not-ok key of data, "'#{key}' not in api data"
+        ..ok key of return-value, "'#{key}' in returned value"
       ..end!
 
   t.timeout-after 5000
-  mock.search callback
+  return-value = mock.search callback
 
 tape 'load, next, and prev call their callbacks' (t) ->
   mock = {
@@ -115,15 +117,15 @@ tape 'page and tag can\'t be modified' (t) ->
     get: (void,, callback) -> callback void {}
   }
 
-  e, data <- mock.search!
+  e, data <- mock.search "t#{Math.random!}"
 
   t
     original-page = data.page
-    data.page = Math.random!
+    data.page = "pp#{Math.random!}"
     ..is data.page, original-page, 'page doesn\'t change'
 
     original-tags = data.tags
-    data.tags = Math.random!
+    data.tags = "tt#{Math.random!}"
     ..is data.tags, original-tags, 'tags doesn\'t change'
 
     ..end!
@@ -248,14 +250,24 @@ tape "actual request test" (t) ->
     ..ok post.id?, 'post contains id'
     ..ok post.file_url?, 'post contains file url'
 
+  t.plan 3 + 4 * 2 + 1
   t.timeout-after 5000
-  e, data <- data.next!
+  var post3, post2
+  data.next (e, data) ->
+    t
+      ..error e, 'no errors'
 
-  t
-    ..error e, 'no errors'
+      post2 := data.0
+      ..ok post2.id?, 'post contains id'
+      ..ok post2.id < post.id, 'post is older'
+      ..ok post2.file_url?, 'post contains file url'
+      ..ok post2.id > post3.id, 'post orders are correct' if post3?
+  .next 2 (e, data) ->
+    t
+      ..error e, 'no errors'
 
-    post2 = data.0
-    ..ok post2.id?, 'post contains id'
-    ..ok post2.id < post.id, 'post is older'
-    ..ok post2.file_url?, 'post contains file url'
-    ..end!
+      post3 := data.0
+      ..ok post3.id?, 'post contains id'
+      ..ok post3.id < post.id, 'post is older'
+      ..ok post3.file_url?, 'post contains file url'
+      ..ok post2.id > post3.id, 'post orders are correct' if post2?
