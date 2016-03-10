@@ -1,9 +1,7 @@
 require! <[https request deep-extend args-js]>
 
 module.exports = class exports
-  (params = {}, key) ->
-    return new exports ... unless @ instanceof exports
-
+  (params = {}, key) ~>
     if typeof params is \string
       @default-parameters = login: params
       @default-parameters.api_key = key if key?
