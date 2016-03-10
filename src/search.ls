@@ -33,7 +33,7 @@ export search = ->
 
     params = deep-extend default-params, params, {tags}
   catch
-    e.stack = stacktrace
+    e.stack = stacktrace if e.stack?
     throw e
 
   var helpers
@@ -50,7 +50,7 @@ export search = ->
         my-params = deep-extend {}, params, {page}
         stacktrace = util.stacktrace
         e, data <- self.search @tags, my-params
-        e.stack = stacktrace if e?
+        e.stack = stacktrace if e?stack?
         callback e, data
 
       next: ->
@@ -63,7 +63,7 @@ export search = ->
 
         stacktrace = util.stacktrace
         e, data <- @load @page + modifier
-        e.stack = stacktrace if e?
+        e.stack = stacktrace if e?stack?
         callback e, data
 
       prev: ->
@@ -76,7 +76,7 @@ export search = ->
 
         stacktrace = util.stacktrace
         e, data <- @load @page - modifier
-        e.stack = stacktrace if e?
+        e.stack = stacktrace if e?stack?
         callback e, data
 
       add: ->
@@ -90,7 +90,7 @@ export search = ->
         my-params = deep-extend {}, params, page: 1
         stacktrace = util.stacktrace
         e, data <- self.search @tags + " #{tag-mod}", my-params
-        e.stack = stacktrace if e?
+        e.stack = stacktrace if e?stack?
         callback e, data
 
       rem: ->
@@ -113,7 +113,7 @@ export search = ->
         my-params = deep-extend {}, params, page: 1
         stacktrace = util.stacktrace
         e, data <- self.search new-tags, my-params
-        e.stack = stacktrace if e?
+        e.stack = stacktrace if e?stack?
         callback e, data
 
   helperify = ->
@@ -123,7 +123,7 @@ export search = ->
 
   @get \posts, params, (e, data) ->
     if e?
-      e.stack = stacktrace
+      e.stack = stacktrace if e.stack?
       return callback e, data
 
     helperify data
