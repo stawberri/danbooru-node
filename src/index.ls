@@ -65,15 +65,23 @@ module.exports = class exports
   put: (path, params, callback) -> do-request @, \PUT, true, ...optional-args ...
   delete: (path, params, callback) -> do-request @, \DELETE, true, ...optional-args ...
 
-  request: (options, callback) ->
+  request: (options, callback = ->) ->
     options = switch typeof options
     | \object => deep-extend {} options
-    | \string => url: options
-    | _       => url: ''
+    | \string => uri: options
+    | \function
+      callback = options
+      fallthrough
+    | _       => uri: ''
     options <<< {base-url}
+    options.uri = options.url if options.url? and not options.uri?
 
     stacktrace = util.stacktrace
     <- request options
-    &0.stack = stacktrace if &0?stack?
-    callback ...&
+    try
+      &0.stack = stacktrace if &0?stack?
+      callback ...&
+    catch
+      e.stack = stacktrace if e.stack?
+      throw e
 |> -> it <<<< it!

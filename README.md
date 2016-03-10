@@ -31,6 +31,18 @@ Perform a http request on Danbooru's api!
     - `err` _Error_. Node.js callbacks always give you an error for some reason. Here you go!
     - `data` _object_. Parsing JSON output is an extra step, so you don't hafta do it! Here's an already-parsed object for you!
 
+### Danbooru.request([options], [callback])
+A simple wrapper function for [request](https://www.npmjs.com/package/request), with `baseUrl` always set to Danbooru. Please refer to [their documentation](https://www.npmjs.com/package/request#requestoptions-callback) for details.
+* `options` _string_. _object_.
+* `callback` _function(err, response, body)_
+
+I'm providing this to give you an easy way to download images and make custom requests without having to type Danbooru's url:
+
+```javascript
+Danbooru.request('/data/9b5d16968321eff393fea8d735d69de3.jpg')
+        .pipe(fs.create-write-stream('cutiefox.jpg'));
+```
+
 ## Authentication
 You know what's a pain? Having to type the same stuff over and over again. You know what you hafta do if you want to be authenticated on Danbooru? Send your `login` and `api_key` over and over again.
 

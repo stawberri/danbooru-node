@@ -162,6 +162,14 @@ tape "request passthrough" (t) ->
   t
     ..error it, 'no errors'
     ..does-not-throw n3~done, 'objects that mess up base-url are okay'
+
+  n4 = nock danbooru-host
+    .get \/
+    .reply 200
+  <- request
+  t
+    ..error it, 'no errors'
+    ..does-not-throw n4~done, 'passing only a callback is okay'
     ..end!
   nock.clean-all!
 
