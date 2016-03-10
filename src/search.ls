@@ -116,7 +116,17 @@ export search = ->
         e.stack = stacktrace if e?stack?
         callback e, data
 
+  post-helpers =
+    get = ->
+    get-large = ->
+    get-preview = ->
+    favorite = ->
+
   helperify = ->
+    for let post in it
+      post <<< post-helpers <<<
+        url:~ -> "https://danbooru.donmai.us/posts/#{post.id}"
+
     it <<< helpers <<<
       page:~ -> params.page
       tags:~ -> params.tags

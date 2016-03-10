@@ -45,7 +45,7 @@ tape 'calls get with parameters' (t) ->
 tape 'doesn\'t replace any properties' (t) ->
   mock = {
     search.search
-    get: (void,, callback) -> callback void {}
+    get: (void,, callback) -> callback void [{}]
   }
 
   var return-value
@@ -54,9 +54,15 @@ tape 'doesn\'t replace any properties' (t) ->
     e, data <- index.get \posts
 
     t
-      for key of received-data
+      for key of received-data when key isnt '0'
         ..not-ok key of data, "'#{key}' not in api data"
         ..ok key of return-value, "'#{key}' in returned value"
+
+      received-data .= 0
+      data .= 0
+
+      for key of received-data
+        ..not-ok key of data, "'#{key}' not in api post data"
       ..end!
 
   t.timeout-after 5000
