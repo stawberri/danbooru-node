@@ -109,7 +109,7 @@ export search = ->
         tag-mod /= ' '
 
         for tag in tags when tag not in tag-mod
-          new-tags.push tags
+          new-tags.push tag
 
         new-tags *= ' '
 
