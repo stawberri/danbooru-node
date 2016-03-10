@@ -232,3 +232,28 @@ tape 'tags are removed by rem' (t) ->
   t
     ..is data.tags, expected-tags, 'correct tags set'
     ..end!
+
+tape "actual request test" (t) ->
+  require! \../src/index
+
+  t.timeout-after 5000
+  e, data <- index.search
+
+  t
+    ..error e, 'no errors'
+
+    post = data.0
+    ..ok post.id?, 'post contains id'
+    ..ok post.file_url?, 'post contains file url'
+
+  t.timeout-after 5000
+  e, data <- data.next!
+
+  t
+    ..error e, 'no errors'
+
+    post2 = data.0
+    ..ok post2.id?, 'post contains id'
+    ..ok post2.id < post.id, 'post is older'
+    ..ok post2.file_url?, 'post contains file url'
+    ..end!
