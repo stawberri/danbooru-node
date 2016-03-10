@@ -34,7 +34,7 @@ Perform a http request on Danbooru's api!
 ### Danbooru.request([options], [callback])
 A simple wrapper function for [request](https://www.npmjs.com/package/request), with `baseUrl` always set to Danbooru. Refer to [their documentation](https://www.npmjs.com/package/request#requestoptions-callback) for details.
 * `options` _string_. _object_. A url or options for your request.
-* `callback` _function(err, response, body)_. Callback function.
+* `callback` _function(err, response, body)_. Callback function. `response` is a usual node HTTP response, while `body` is the body of that response, ready for using.
 * **returns** _request_. Request object.
 
 I'm providing this to give you an easy way to download images and make custom requests without having to type Danbooru's url:
