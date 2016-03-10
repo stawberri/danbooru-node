@@ -54,7 +54,7 @@ Save parameters for later. Returns a new Danbooru object that you can use to mak
 
 ## Searching
 
-"But wait," you say, "APIs are supposed to help make my life easier! Why do I still have to type so much?" Well, I made a helper function called `search` for you, and as a bonus, its data object even gives you extra helper functions to get around more easily!
+"But wait," you say, "APIs are supposed to help make my life easier! Why do I still have to type so much?" Well, I made a helper function called `.search()` for you, and as a bonus, its data object even gives you extra helper functions to get around more easily!
 
 ```javascript
 Danbooru.search('1girl fox_ears', function(err, page1) {
@@ -84,7 +84,7 @@ by default, but you can change the number of posts you want by specifying it. Tr
     - `err` _Error_. Like always, an error object if there was one.
     - `data` _Object_. Whatever Danbooru's API returns, but with some extra methods and properties. More details below!
 
-### Danbooru.search() > callback data
+### Danbooru.search -> callback -> data
 Like I've said probably three times already, this data object is the one that Danbooru's api gives you, but with some nice helper functions! You can see sample API output by [visiting Danbooru](https://danbooru.donmai.us/posts.json?tags=fox_ears&limit=2). I haven't told you what the methods are yet, so~
 
 #### searchData.page
