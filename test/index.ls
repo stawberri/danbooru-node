@@ -79,20 +79,20 @@ tape 'no return value' (t) ->
   t.not-ok return-value?
 
 tape 'proper deep parameter handling' (t) ->
-  address = "#{Math.floor 5 * Math.random!}"
+  address = "a#{Math.floor 5 * Math.random!}"
 
-  deep-object-key = "#{Math.random!}"
+  deep-object-key = "k#{Math.random!}"
   deep-object =
     (deep-object-key):
-      "#{Math.random!}": "#{Math.random!}"
-      "#{Math.random!}": "#{Math.random!}"
+      "b#{Math.random!}": "bb#{Math.random!}"
+      "c#{Math.random!}": "cc#{Math.random!}"
   deep-object-check = JSON.stringify deep-object
   deep-object-modifier =
     (deep-object-key):
-      "#{Math.random!}": "#{Math.random!}"
-      "#{Math.random!}": "#{Math.random!}"
-      "#{Math.random!}": "#{Math.random!}"
-      "#{Math.random!}": "#{Math.random!}"
+      "d#{Math.random!}": "dd#{Math.random!}"
+      "e#{Math.random!}": "ee#{Math.random!}"
+      "f#{Math.random!}": "ff#{Math.random!}"
+      "g#{Math.random!}": "gg#{Math.random!}"
   deep-object-child = {} <<< deep-object[deep-object-key] <<< deep-object-modifier[deep-object-key]
 
   n = nock danbooru-host
@@ -114,14 +114,15 @@ tape 'proper deep parameter handling' (t) ->
 
 for let error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
   tape "http error #{error}" (t) ->
+    address = "a#{Math.floor 5 * Math.random!}"
     expected-response = "e#{Math.random!}": "ee#{Math.random!}"
 
     n = nock danbooru-host
-      .get \/.json
+      .get "/#{address}.json"
       .reply error, expected-response
 
     t.timeout-after 500
-    e, data <- index.get
+    e, data <- index.get address
 
     t
       ..ok ((error is 200) xor (e? && e instanceof Error)), 'error generation'

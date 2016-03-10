@@ -1,6 +1,6 @@
 {
   "name": "danbooru",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "danbooru api wrapper",
   "main": "lib/index.js",
   "scripts": {
@@ -35,6 +35,7 @@
     "tape": "^4.5.1"
   },
   "dependencies": {
+    "args-js": "^0.10.11",
     "deep-extend": "^0.4.1",
     "request": "^2.69.0"
   }
