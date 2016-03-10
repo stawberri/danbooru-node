@@ -23,7 +23,7 @@ Danbooru.get('posts', {limit: 5, tags: 'cat_ears'}, function(err, data) {
 You can also use `Danbooru.post()`, `Danbooru.put()`, and `Danbooru.delete()`. They all have the same parameters and give you the same callback!
 
 ### Danbooru.method(path, [params], [callback])
-Perform a `GET` request on Danbooru's api!
+Perform a http request on Danbooru's api!
 * `method` _property_. One of `get`, `post`, `put`, or `delete`, depending on what type of request you would like to make.
 * `path` _string_. The API documentation mentions a base URL. You put that here! The slash and `.json` are optional.
 * `params` _object_. Just provide your parameters as an object!
