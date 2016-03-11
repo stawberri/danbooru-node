@@ -161,7 +161,8 @@ Gives you a random post from the set of posts you've found. Doesn't return anyth
 When you're searching, you're probably looking for posts. When you're looking for posts, you probably wannya make get requests to their image URLs to be able to use them. Rather than make you write `Danbooru.request(post.file_url)` over and over again, how about we make things simpler for you? This example uses `random`, but you could also just go to any valid index and it would still work.
 
 ```javascript
-authedBooru.search('maid', function(err, data) {
+var authBooru = new Danbooru('maidlover', 'maidsarecute');
+authBooru.search('maid', function(err, data) {
     if(err) throw err;
     data.random().favorite(); // Favoriting a random maid~ H-how bold!
 });
