@@ -95,6 +95,8 @@ export search = ->
         my-params = deep-extend {}, params, page: 1
         self.search new-tags, my-params, callback
 
+      random: -> @[Math.floor @length * Math.random!] if @length
+
     post-helpers :=
       get: -> self.request @file_url, it
       get-large: -> self.request @large_file_url, it

@@ -289,7 +289,7 @@ tape 'posts\' helper functions work' (t) ->
   n = nock danbooru-host
     .get \/posts.json
     .query true
-    .reply 200, JSON.stringify [{id, file_url, large_file_url, preview_file_url}]
+    .reply 200 JSON.stringify [{id, file_url, large_file_url, preview_file_url}]
 
   t.timeout-after 5000
   require! \../src/index
@@ -320,4 +320,42 @@ tape 'posts\' helper functions work' (t) ->
   t.does-not-throw n~done
 
   t.end!
+  nock.clean-all!
+
+tape 'random function works' (t) ->
+  ids =
+    "i#{Math.floor 100000 * Math.random!}"
+    "i#{Math.floor 100000 * Math.random!}"
+    "i#{Math.floor 100000 * Math.random!}"
+    "i#{Math.floor 100000 * Math.random!}"
+    "i#{Math.floor 100000 * Math.random!}"
+
+  n = nock danbooru-host
+    .get \/posts.json
+    .query true
+    .reply 200 JSON.stringify [
+      * id: ids.1
+      * id: ids.2
+      * id: ids.3
+      * id: ids.4
+      * id: ids.5
+    ]
+
+  t.timeout-after 500
+  require! \../src/index
+  e, data <- index.search
+  t.does-not-throw n~done
+
+  post = data.random!
+  t.ok post.id in ids, 'id is one of given ids'
+
+  n.get \/posts.json
+    .query true
+    .reply 200 '[]'
+
+  e, data <- index.search
+  t
+    ..does-not-throw n~done
+    ..not-ok (data.random!)?, 'empty array returns undefined'
+    ..end!
   nock.clean-all!
