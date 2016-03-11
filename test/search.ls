@@ -136,7 +136,7 @@ tape 'page and tag can\'t be modified' (t) ->
 
     ..end!
 
-tape 'load replaces page requested' (t) ->
+tape 'load uses page requested' (t) ->
   mock = {
     search.search
     get: (void,, callback) -> callback void {}

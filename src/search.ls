@@ -1,4 +1,4 @@
-require! <[./util args-js deep-extend]>
+require! <[args-js deep-extend]>
 
 default-params = limit: 100
 
@@ -12,29 +12,23 @@ export search = ->
       _default: ->
   ], &
 
-  stacktrace = util.stacktrace!
+  if params.page?
+    params.page |>= Number
+    throw new Error 'page parameter must be a Number' if isNaN params.page
+    params.page >?= 1
+  else
+    params.page = 1
 
-  try
-    if params.page?
-      params.page |>= Number
-      throw new Error 'page parameter must be a Number' if isNaN params.page
-      params.page >?= 1
-    else
-      params.page = 1
+  tags .= trim!
+  tags-array = tags / /\s+/
 
-    tags .= trim!
-    tags-array = tags / /\s+/
+  tags = []
+  for tag in tags-array when tag not in tags
+    tags.push tag
 
-    tags = []
-    for tag in tags-array when tag not in tags
-      tags.push tag
+  tags *= ' '
 
-    tags *= ' '
-
-    params = deep-extend default-params, params, {tags}
-  catch
-    e.stack = stacktrace if e.stack?
-    throw e
+  params = deep-extend default-params, params, {tags}
 
   var helpers, post-helpers
   let self = @
@@ -48,10 +42,7 @@ export search = ->
         ], &
 
         my-params = deep-extend {}, params, {page}
-        stacktrace = util.stacktrace
-        e, data <- self.search @tags, my-params
-        e.stack = stacktrace if e?stack?
-        callback e, data
+        self.search @tags, my-params, callback
 
       next: ->
         {modifier, callback} = args-js [
@@ -61,10 +52,7 @@ export search = ->
             _default: ->
         ], &
 
-        stacktrace = util.stacktrace
-        e, data <- @load @page + modifier
-        e.stack = stacktrace if e?stack?
-        callback e, data
+        @load @page + modifier, callback
 
       prev: ->
         {modifier, callback} = args-js [
@@ -74,10 +62,7 @@ export search = ->
             _default: ->
         ], &
 
-        stacktrace = util.stacktrace
-        e, data <- @load @page - modifier
-        e.stack = stacktrace if e?stack?
-        callback e, data
+        @load @page - modifier, callback
 
       add: ->
         {tag-mod, callback} = args-js [
@@ -88,10 +73,7 @@ export search = ->
         ], &
 
         my-params = deep-extend {}, params, page: 1
-        stacktrace = util.stacktrace
-        e, data <- self.search @tags + " #{tag-mod}", my-params
-        e.stack = stacktrace if e?stack?
-        callback e, data
+        self.search @tags + " #{tag-mod}", my-params, callback
 
       rem: ->
         {tag-mod, callback} = args-js [
@@ -111,10 +93,7 @@ export search = ->
         new-tags *= ' '
 
         my-params = deep-extend {}, params, page: 1
-        stacktrace = util.stacktrace
-        e, data <- self.search new-tags, my-params
-        e.stack = stacktrace if e?stack?
-        callback e, data
+        self.search new-tags, my-params, callback
 
     post-helpers :=
       get: -> self.request @file_url, it
@@ -139,9 +118,7 @@ export search = ->
       tags:~ -> params.tags
 
   @get \posts, params, (e, data) ->
-    if e?
-      e.stack = stacktrace if e.stack?
-      return callback e, data
+    return callback e, data if e?
 
     helperify data
 

@@ -134,7 +134,7 @@ for let error in [200, 204, 403, 404, 420, 421, 422, 423, 424, 500, 503]
 tape "request passthrough" (t) ->
   request = index~request
 
-  address = "a#{Math.floor 5 * Math.random!}"
+  address = "a#{Math.random!}"
   n1 = nock danbooru-host
     .get "/#{address}"
     .reply 200
@@ -145,7 +145,7 @@ tape "request passthrough" (t) ->
     ..error it, 'no errors'
     ..does-not-throw n1~done, 'strings are okay'
 
-  address = "a#{Math.floor 5 * Math.random!}"
+  address = "a#{Math.random!}"
   n2 = nock danbooru-host
     .get "/#{address}"
     .reply 200
@@ -154,7 +154,7 @@ tape "request passthrough" (t) ->
     ..error it, 'no errors'
     ..does-not-throw n2~done, 'objects are okay'
 
-  address = "a#{Math.floor 5 * Math.random!}"
+  address = "a#{Math.random!}"
   n3 = nock danbooru-host
     .get "/#{address}"
     .reply 200

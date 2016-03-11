@@ -1,4 +1,4 @@
-require! <[https request deep-extend args-js ./search ./util]>
+require! <[https request deep-extend args-js ./search]>
 
 base-url = \https://danbooru.donmai.us/
 
@@ -26,8 +26,6 @@ module.exports = class exports
 
   parse-path = -> "#{base-url}#{(it is /^\/?(.*?)(?:\.(?:json|xml)|)$/).1}.json"
   do-request = (self, method, body, path, params, callback) !->
-    stacktrace = util.stacktrace do-request
-
     let @ = self
       data = deep-extend {}, @default-parameters, params
       data-name = if body then \form else \qs
@@ -36,29 +34,18 @@ module.exports = class exports
       request do
         {uri, method, (data-name): data, +json}
         (e, response, body) ->
-          try
-            throw e if e?
-            throw new Error danbooru-errors[response.status-code] unless response.status-code is 200
-            callback void body
-          catch
-            e.stack = stacktrace if e.stack?
-            callback e, body
+          e ?= new Error danbooru-errors[response.status-code] unless response.status-code is 200
+          callback e, body
   optional-args = ->
-    stacktrace = util.stacktrace optional-args
-
-    try
-      {path, params, callback} = args-js [
-        * path: args-js.STRING .|. args-js.Optional
-          _default: ''
-        * params: args-js.OBJECT .|. args-js.Optional
-          _default: {}
-        * callback: args-js.FUNCTION .|. args-js.Optional
-          _default: ->
-      ], &
-      [path, params, callback]
-    catch
-      e.stack = stacktrace if e.stack?
-      throw e
+    {path, params, callback} = args-js [
+      * path: args-js.STRING .|. args-js.Optional
+        _default: ''
+      * params: args-js.OBJECT .|. args-js.Optional
+        _default: {}
+      * callback: args-js.FUNCTION .|. args-js.Optional
+        _default: ->
+    ], &
+    [path, params, callback]
 
   get: (path, params, callback) -> do-request @, \GET, false, ...optional-args ...
   post: (path, params, callback) -> do-request @, \POST, true, ...optional-args ...
@@ -75,13 +62,5 @@ module.exports = class exports
     | _       => uri: ''
     options <<< {base-url}
     options.uri = options.url if options.url? and not options.uri?
-
-    stacktrace = util.stacktrace
-    <- request options
-    try
-      &0.stack = stacktrace if &0?stack?
-      callback ...&
-    catch
-      e.stack = stacktrace if e.stack?
-      throw e
+    request options, callback
 |> -> it <<<< it!
