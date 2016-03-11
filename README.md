@@ -4,12 +4,38 @@ danbooru api wrapper
 [![NPM](https://nodei.co/npm/danbooru.png?mini=true)](https://nodei.co/npm/danbooru/)
 [![Build Status](https://travis-ci.org/stawberri/danbooru-node.svg?branch=master)](https://travis-ci.org/stawberri/danbooru-node)
 
-My api wrapper is super simple! First, you require it:
+My api wrapper is super simple! You just require it, then refer to [Danbooru's lovely api documentation](https://danbooru.donmai.us/wiki_pages/43568) and make requests!
 ```javascript
 var Danbooru = require('danbooru');
 ```
 
-Then you just refer to [Danbooru's lovely api documentation](https://danbooru.donmai.us/wiki_pages/43568) and make requests!
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Making requests](#making-requests)
+  - [Danbooru.method([path], [params], [callback])](#danboorumethodpath-params-callback)
+  - [Danbooru.request([options], [callback])](#danboorurequestoptions-callback)
+- [Authentication](#authentication)
+  - [[new] Danbooru([object], [api_key])](#new-danbooruobject-api_key)
+- [Searching](#searching)
+  - [Danbooru.search([tags], [params], [callback])](#danboorusearchtags-params-callback)
+  - [searchData](#searchdata)
+    - [searchData.page](#searchdatapage)
+    - [searchData.load([page], [callback])](#searchdataloadpage-callback)
+    - [searchData.next([modifier], [callback])](#searchdatanextmodifier-callback)
+    - [searchData.prev([modifier], [callback])](#searchdataprevmodifier-callback)
+    - [searchData.tags](#searchdatatags)
+    - [searchData.add([tagMod], [callback])](#searchdataaddtagmod-callback)
+    - [searchData.add([tagMod], [callback])](#searchdataaddtagmod-callback-1)
+    - [searchData.random()](#searchdatarandom)
+  - [post](#post)
+    - [post.get([callback])](#postgetcallback)
+    - [post.getLarge([callback])](#postgetlargecallback)
+    - [post.getPreview([callback])](#postgetpreviewcallback)
+    - [post.favorite([yes], [callback])](#postfavoriteyes-callback)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Making requests
 
@@ -93,7 +119,7 @@ by default, but you can change the number of posts you want by specifying it. Tr
     - `searchData` _object_. Whatever Danbooru's API returns, but with some extra methods and properties. More details below!
 * **returns** _object_. Contains only my extra helper methods and properties from `searchData`. Also details below~
 
-### Danbooru.search -> [callback] -> data
+### searchData
 Like I've said probably three times already, this data object is the one that Danbooru's api gives you, but with some nice helper functions! You can see sample API output by [visiting Danbooru](https://danbooru.donmai.us/posts.json?tags=fox_ears&limit=2). I haven't told you what the methods are yet, so~
 
 #### searchData.page
@@ -131,7 +157,7 @@ Calls `Danbooru.search()` again with the same parameters as last time, removing 
 Gives you a random post from the set of posts you've found. Doesn't return anything when you don't have any posts.
 * **returns** _object_. A random post from `searchData`.
 
-### Danbooru.search -> posts
+### post
 When you're searching, you're probably looking for posts. When you're looking for posts, you probably wannya make get requests to their image URLs to be able to use them. Rather than make you write `Danbooru.request(post.file_url)` over and over again, how about we make things simpler for you? This example uses `random`, but you could also just go to any valid index and it would still work.
 
 ```javascript

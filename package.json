@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "lsc -o lib src",
+    "doctoc": "doctoc --notitle README.md",
     "clean": "rm -rf lib",
     "test": "livetape test/*.ls | faucet",
     "prepublish": "npm run build",
@@ -28,6 +29,7 @@
   },
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
   "devDependencies": {
+    "doctoc": "^1.0.0",
     "faucet": "0.0.1",
     "livescript": "^1.4.0",
     "livetape": "^1.0.0",
