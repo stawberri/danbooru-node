@@ -1,4 +1,4 @@
-require! <[tape ../src/search]>
+require! <[tape ../src/search nock]>
 
 tape 'defined in module' -> it
   fake-param = "s#{Math.random!}"
@@ -247,7 +247,7 @@ tape "actual request test" (t) ->
   require! \../src/index
 
   t.timeout-after 5000
-  e, data <- index.search
+  e, data <- index.search limit: 3
 
   t
     ..error e, 'no errors'
@@ -277,3 +277,47 @@ tape "actual request test" (t) ->
       ..ok post3.id < post.id, 'post is older'
       ..ok post3.file_url?, 'post contains file url'
       ..ok post2.id > post3.id, 'post orders are correct' if post2?
+
+danbooru-host = \https://danbooru.donmai.us/
+
+tape 'posts\' helper functions work' (t) ->
+  id = "i#{Math.floor 100000 * Math.random!}"
+  file_url = "u#{Math.random!}"
+  large_file_url = "l#{Math.random!}"
+  preview_file_url = "p#{Math.random!}"
+
+  n = nock danbooru-host
+    .get \/posts.json
+    .query true
+    .reply 200, JSON.stringify [{id, file_url, large_file_url, preview_file_url}]
+
+  t.timeout-after 5000
+  require! \../src/index
+  e, data <- index.search
+  t.does-not-throw n~done
+
+  post = data.0
+  t.is post.url, "#{danbooru-host}posts/#{id}"
+
+  n.get "/#{file_url}" .reply 200
+  <- post.get
+  t.does-not-throw n~done
+
+  n.get "/#{large_file_url}" .reply 200
+  <- post.get-large
+  t.does-not-throw n~done
+
+  n.get "/#{preview_file_url}" .reply 200
+  <- post.get-preview
+  t.does-not-throw n~done
+
+  n.post \/favorites.json (-> it.post_id is id) .reply 200
+  <- post.favorite!
+  t.does-not-throw n~done
+
+  n.delete "/favorites/#{id}.json" .reply 200
+  <- post.favorite false
+  t.does-not-throw n~done
+
+  t.end!
+  nock.clean-all!

@@ -36,7 +36,7 @@ export search = ->
     e.stack = stacktrace if e.stack?
     throw e
 
-  var helpers
+  var helpers, post-helpers
   let self = @
     helpers :=
       load: ->
@@ -116,11 +116,18 @@ export search = ->
         e.stack = stacktrace if e?stack?
         callback e, data
 
-  post-helpers =
-    get = ->
-    get-large = ->
-    get-preview = ->
-    favorite = ->
+    post-helpers :=
+      get: -> self.request @file_url, it
+      get-large: -> self.request @large_file_url, it
+      get-preview: -> self.request @preview_file_url, it
+      favorite: (favorite = true, callback = ->) ->
+        if typeof favorite is \function
+          callback = favorite
+          favorite = true
+        if favorite
+          self.post \favorites, post_id: @id, callback
+        else
+          self.delete "favorites/#{@id}", callback
 
   helperify = ->
     for let post in it
