@@ -34,6 +34,7 @@ var Danbooru = require('danbooru');
     - [post.getLarge([callback])](#postgetlargecallback)
     - [post.getPreview([callback])](#postgetpreviewcallback)
     - [post.favorite([yes], [callback])](#postfavoriteyes-callback)
+    - [post.url](#posturl)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -169,17 +170,17 @@ authBooru.search('maid', function(err, data) {
 ```
 
 #### post.get([callback])
-This does a get request to your post's `file_url`, which is usually your post's full size image. This also uses [request](https://www.npmjs.com/package/request), just like `Danbooru.request()`
+This does a get request to your post's `file_url`, which is usually your post's full size image. This also uses [request](https://www.npmjs.com/package/request), just like `Danbooru.request()`.
 * `callback` _function(err, response, body)_. Callback function. `response` is a usual node HTTP response, while `body` is your image data.
 * **returns** _request_. Request object.
 
 #### post.getLarge([callback])
-This does a get request to your post's `large_file_url`, which is a large image appropriate for browsers, but not original size. It's sometimes the same image as `file_url`. This also uses [request](https://www.npmjs.com/package/request), just like `Danbooru.request()`
+This does a get request to your post's `large_file_url`, which is a large image appropriate for browsers, but not original size. It's sometimes the same image as `file_url`. This also uses [request](https://www.npmjs.com/package/request), just like `Danbooru.request()`.
 * `callback` _function(err, response, body)_. Callback function. `response` is a usual node HTTP response, while `body` is your image data.
 * **returns** _request_. Request object.
 
 #### post.getPreview([callback])
-This does a get request to your post's `preview_file_url`, which is usually your post's tiny preview image, useful for thumbnails. This also uses [request](https://www.npmjs.com/package/request), just like `Danbooru.request()`
+This does a get request to your post's `preview_file_url`, which is usually your post's tiny preview image, useful for thumbnails. This also uses [request](https://www.npmjs.com/package/request), just like `Danbooru.request()`.
 * `callback` _function(err, response, body)_. Callback function. `response` is a usual node HTTP response, while `body` is your image data.
 * **returns** _request_. Request object.
 
@@ -187,3 +188,6 @@ This does a get request to your post's `preview_file_url`, which is usually your
 This function only really works with an authenticated Danbooru object, but you can use it to quickly favorite or unfavorite a post!
 * `yes` _boolean_. Defaults to yes. Pass `false` to perform an unfavorite instead.
 * `callback` _function(err, data)_. It's a callback.
+
+#### post.url
+This property contains a human friendly post url. This is where you would find this post if you were manually browsing Danbooru in a browser.
