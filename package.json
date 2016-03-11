@@ -1,6 +1,6 @@
 {
   "name": "danbooru",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "danbooru api wrapper",
   "main": "lib/index.js",
   "scripts": {
