@@ -281,7 +281,7 @@ tape "actual request test" (t) ->
 danbooru-host = \https://danbooru.donmai.us/
 
 tape 'posts\' helper functions work' (t) ->
-  id = "i#{Math.floor 100000 * Math.random!}"
+  id = "i#{Math.floor 100000 * Math.random!}form-data-test#{Math.floor 100000 * Math.random!}i"
   file_url = "u#{Math.random!}"
   large_file_url = "l#{Math.random!}"
   preview_file_url = "p#{Math.random!}"
@@ -311,7 +311,10 @@ tape 'posts\' helper functions work' (t) ->
   <- post.get-preview
   t.does-not-throw n~done
 
-  n.post \/favorites.json (-> it.post_id is id) .reply 200
+  n
+    .post \/favorites.json ->
+      (s = it.index-of \post_id) > -1 and (s = it.index-of id, s) > -1
+    .reply 200
   <- post.favorite!
   t.does-not-throw n~done
 

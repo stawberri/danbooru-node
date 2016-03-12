@@ -28,13 +28,13 @@ module.exports = class
   do-request = (self, method, body, path, params, callback) !->
     let @ = self
       data = deep-extend {}, @default-parameters, params
-      data-name = if body then \form else \qs
-      uri = parse-path path
+      data-name = if body then \formData else \qs
+      url = parse-path path
 
       request do
-        {uri, method, (data-name): data, +json}
+        {url, method, (data-name): data, +json}
         (e, response, body) ->
-          e ?= new Error danbooru-errors[response.status-code] unless response.status-code is 200
+          e ?= new Error danbooru-errors[response.status-code] unless response?status-code is 200
           callback e, body
   optional-args = ->
     {path, params, callback} = args-js [

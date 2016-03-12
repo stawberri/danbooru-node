@@ -32,8 +32,12 @@ danbooru-host = \https://danbooru.donmai.us/
 
 for let method in <[get post put delete]>
   tape "#{method} requests" (t) ->
-    default-parameters = "d#{Math.random!}": "dd#{Math.random!}"
-    passed-parameters = "p#{Math.random!}": "pp#{Math.random!}"
+    d-key = "d#{Math.random!}d"
+    d-value = "dd#{Math.random!}form-data-test#{Math.random!}dd"
+    default-parameters = (d-key): d-value
+    p-key = "p#{Math.random!}p"
+    p-value = "pp#{Math.random!}form-data-test#{Math.random!}pp"
+    passed-parameters = (p-key): p-value
     expected-parameters = {} <<< default-parameters <<< passed-parameters
 
     path = "a#{Math.random!}"
@@ -52,7 +56,10 @@ for let method in <[get post put delete]>
       n.get expected-path
         .query expected-parameters
     else
-      n[method] expected-path, expected-parameters
+      n[method] expected-path, ->
+        (s = it.index-of d-key) > -1 and (s = it.index-of d-value, s) > -1
+        and
+        (s = it.index-of p-key) > -1 and (s = it.index-of p-value, s) > -1
     m.reply 200, expected-results
 
     t.timeout-after 500
