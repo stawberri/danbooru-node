@@ -2,7 +2,7 @@ require! <[https request deep-extend args-js ./search]>
 
 base-url = \https://danbooru.donmai.us/
 
-module.exports = class exports
+module.exports = class
   :: <<< search
 
   (params = {}, key) ~>
