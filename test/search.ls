@@ -337,11 +337,11 @@ tape 'random function works' (t) ->
     .get \/posts.json
     .query true
     .reply 200 JSON.stringify [
+      * id: ids.0
       * id: ids.1
       * id: ids.2
       * id: ids.3
       * id: ids.4
-      * id: ids.5
     ]
 
   t.timeout-after 500
