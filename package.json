@@ -16,10 +16,21 @@
     "url": "git+https://stawberri@github.com/stawberri/danbooru-node.git"
   },
   "keywords": [
-    "danbooru",
     "anime",
-    "image",
     "api",
+    "booru",
+    "danbooru",
+    "favorite",
+    "favorites",
+    "gallery",
+    "image",
+    "images",
+    "manga",
+    "post",
+    "posts",
+    "search",
+    "tag",
+    "tags",
     "wrapper"
   ],
   "author": "Pudding <aideen@aideen.pw> (https://aideen.pw)",
