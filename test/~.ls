@@ -1,0 +1,4 @@
+require! <[
+  ./index
+  ./search
+]>
