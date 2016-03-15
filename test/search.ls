@@ -325,6 +325,35 @@ tape 'posts\' helper functions work' (t) ->
   t.end!
   nock.clean-all!
 
+tape 'posts\' get helper functions give errors when urls aren\'t defined' (t) ->
+  id = "i#{Math.floor 100000 * Math.random!}form-data-test#{Math.floor 100000 * Math.random!}i"
+
+  n = nock danbooru-host
+    .get \/posts.json
+    .query true
+    .reply 200 JSON.stringify [{id}]
+
+  t.timeout-after 5000
+  require! \../src/index
+  e, data <- index.search
+  t.does-not-throw n~done
+
+  post = data.0
+  t.is post.url, "#{danbooru-host}posts/#{id}"
+
+  pending = 3
+
+  response-check = (name, e) --> t
+    ..ok e?, "#{name}'s callback has an error"
+    ..end! unless --pending
+
+  t
+    ..not-ok (post.get response-check 'get')? 'get does not return'
+    ..not-ok (post.get-large response-check 'get-large')? 'get-large does not return'
+    ..not-ok (post.get-preview response-check 'get-preview')? 'get-preview does not return'
+
+  nock.clean-all!
+
 tape 'random function works' (t) ->
   ids =
     "i#{Math.floor 100000 * Math.random!}"

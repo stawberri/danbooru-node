@@ -98,9 +98,24 @@ export search = ->
       random: -> @[Math.floor @length * Math.random!] if @length
 
     post-helpers :=
-      get: -> self.request @file_url, it
-      get-large: -> self.request @large_file_url, it
-      get-preview: -> self.request @preview_file_url, it
+      get: ->
+        if @file_url
+          self.request @file_url, it
+        else
+          it new Error 'post has no file_url'
+          void
+      get-large: ->
+        if @large_file_url
+          self.request @large_file_url, it
+        else
+          it new Error 'post has no large_file_url'
+          void
+      get-preview: ->
+        if @preview_file_url
+          self.request @preview_file_url, it
+        else
+          it new Error 'post has no preview_file_url'
+          void
       favorite: (favorite = true, callback = ->) ->
         if typeof favorite is \function
           callback = favorite
