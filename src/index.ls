@@ -1,4 +1,4 @@
-require! <[https request deep-extend args-js ./search]>
+require! <[https request extend args-js ./search]>
 
 base-url = \https://danbooru.donmai.us/
 
@@ -10,7 +10,7 @@ module.exports = class
       @default-parameters = login: params
       @default-parameters.api_key = key if key? and typeof key is \string
     else
-      @default-parameters = deep-extend {} params
+      @default-parameters = extend true {} params
 
   danbooru-errors =
     204: '204 No Content: Request was successful'
@@ -27,7 +27,7 @@ module.exports = class
   parse-path = -> "#{base-url}#{(it is /^\/?(.*?)(?:\.(?:json|xml)|)$/).1}.json"
   do-request = (self, method, body, path, params, callback) !->
     let @ = self
-      data = deep-extend {}, @default-parameters, params
+      data = extend true, {}, @default-parameters, params
       data-name = if body then \formData else \qs
       url = parse-path path
 
@@ -54,7 +54,7 @@ module.exports = class
 
   request: (options, callback = ->) ->
     options = switch typeof options
-    | \object => deep-extend {} options
+    | \object => extend true {} options
     | \string => uri: options
     | \function
       callback = options

@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "args-js": "^0.10.11",
-    "deep-extend": "^0.4.1",
+    "extend": "^3.0.0",
     "request": "^2.69.0"
   }
 }

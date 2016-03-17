@@ -1,4 +1,4 @@
-require! <[args-js deep-extend]>
+require! <[args-js extend]>
 
 default-params = limit: 100
 
@@ -28,7 +28,7 @@ export search = ->
 
   tags *= ' '
 
-  params = deep-extend default-params, params, {tags}
+  params = extend true, default-params, params, {tags}
 
   var helpers, post-helpers
   let self = @
@@ -41,7 +41,7 @@ export search = ->
             _default: ->
         ], &
 
-        my-params = deep-extend {}, params, {page}
+        my-params = extend true, {}, params, {page}
         self.search @tags, my-params, callback
 
       next: ->
@@ -72,7 +72,7 @@ export search = ->
             _default: ->
         ], &
 
-        my-params = deep-extend {}, params, page: 1
+        my-params = extend true, {}, params, page: 1
         self.search @tags + " #{tag-mod}", my-params, callback
 
       rem: ->
@@ -92,7 +92,7 @@ export search = ->
 
         new-tags *= ' '
 
-        my-params = deep-extend {}, params, page: 1
+        my-params = extend true, {}, params, page: 1
         self.search new-tags, my-params, callback
 
       random: -> @[Math.floor @length * Math.random!] if @length
