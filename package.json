@@ -7,7 +7,7 @@
     "build": "lsc -o lib src",
     "doctoc": "doctoc --notitle README.md",
     "clean": "rm -rf lib",
-    "test": "lsc test/~",
+    "test": "lsc test",
     "prepublish": "npm run build",
     "postpublish": "npm run clean"
   },

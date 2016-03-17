@@ -6,7 +6,13 @@ danbooru api wrapper
 
 My api wrapper is super simple! You just require it, then refer to [Danbooru's lovely api documentation](https://danbooru.donmai.us/wiki_pages/43568) and make requests!
 ```javascript
-var Danbooru = require('danbooru');
+Danbooru = require('danbooru');
+
+Danbooru.search('rating:s order:rank', function(err, data) {
+  data.random()
+      .getLarge()
+      .pipe(require('fs').createWriteStream('random.jpg'));
+});
 ```
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -42,8 +48,8 @@ var Danbooru = require('danbooru');
 
 ```javascript
 Danbooru.get('posts', {limit: 5, tags: 'cat_ears'}, function(err, data) {
-    if(err) throw err;
-    console.log(data); // All of your cute kittehgirls!
+  if(err) throw err;
+  console.log(data); // All of your cute kittehgirls!
 });
 ```
 
@@ -55,8 +61,8 @@ Perform a http request on Danbooru's api!
 * `path` _string_. The API documentation mentions a base URL. You put that here! The slash and `.json` are optional. In fact, the entire thing is optional, but you won't get anything useful from omitting path.
 * `params` _object_. Just provide your parameters as an object!
 * `callback` _function(err, data)_. What do you wannya do after you get your api request?
-    - `err` _Error_. Node.js callbacks always give you an error for some reason. Here you go!
-    - `data` _object_. Parsing JSON output is an extra step, so you don't hafta do it! Here's an already-parsed object for you!
+  - `err` _Error_. Node.js callbacks always give you an error for some reason. Here you go!
+  - `data` _object_. Parsing JSON output is an extra step, so you don't hafta do it! Here's an already-parsed object for you!
 
 ### Danbooru.request([options], [callback])
 A simple wrapper function for [request](https://www.npmjs.com/package/request), with `baseUrl` always set to Danbooru. Refer to [their documentation](https://www.npmjs.com/package/request#requestoptions-callback) for details.
@@ -75,7 +81,7 @@ Danbooru.request('/data/9b5d16968321eff393fea8d735d69de3.jpg')
 You know what's a pain? Having to type the same stuff over and over again. You know what you hafta do if you want to be authenticated on Danbooru? Send your `login` and `api_key` over and over again.
 
 ```javascript
-var authedBooru = new Danbooru({login: 'topsecret', api_key: 'evenmoresecret'});
+authedBooru = new Danbooru({login: 'topsecret', api_key: 'evenmoresecret'});
 authedBooru.post('favorites', {post_id: 2288637}, function(err, data) {
     if(err) throw err;
     console.log('Successfully favorited!'); // Wow, you do like kittehgirls!
@@ -84,7 +90,7 @@ authedBooru.post('favorites', {post_id: 2288637}, function(err, data) {
 
 If that's still too much typing for you, you can use a shortcut!
 ```javascript
-var shortBooru = Danbooru('topsecret', 'evenmoresecret');
+shortBooru = Danbooru('topsecret', 'evenmoresecret');
 ```
 
 ### [new] Danbooru([object], [api_key])
@@ -98,15 +104,15 @@ Save parameters for later. Returns a new Danbooru object that you can use to mak
 
 ```javascript
 Danbooru.search('1girl fox_ears', function(err, page1) {
-    if(err) throw err;
-    console.log(page1); // Foxgirls!
+  if(err) throw err;
+  console.log(page1); // Foxgirls!
 }).next(function(err, page2) {
+  if(err) throw err;
+  console.log(page2); // More foxgirls!
+  page2.next(function(err, page3) {
     if(err) throw err;
-    console.log(page2); // More foxgirls!
-    page2.next(function(err, page3) {
-        if(err) throw err;
-        console.log(page3); // So many foxgirls~ ♥
-    });
+    console.log(page3); // So many foxgirls~ ♥
+  });
 });
 ```
 
@@ -116,8 +122,8 @@ Perform a search on Danbooru. A shortcut for `Danbooru.get('posts', {tags: tags,
 * `params` _object_. These are just parameters that will be directly passed to Danbooru's API. It will contain `limit: 100`
 by default, but you can change the number of posts you want by specifying it. Trying to specify `tags` won't do anything, because the `tags` parameter always overwrites the value of `tags` here, even if `tags` is empty or missing (which makes it default to empty).
 * `callback` _function(err, searchData)_ Do something after your request comes back.
-    - `err` _Error_. Like always, an error object if there was one.
-    - `searchData` _object_. Whatever Danbooru's API returns, but with some extra methods and properties. More details below!
+  - `err` _Error_. Like always, an error object if there was one.
+  - `searchData` _object_. Whatever Danbooru's API returns, but with some extra methods and properties. More details below!
 * **returns** _object_. Contains only my extra helper methods and properties from `searchData`. Also details below~
 
 ### searchData
@@ -162,10 +168,10 @@ Gives you a random post from the set of posts you've found. Doesn't return anyth
 When you're searching, you're probably looking for posts. When you're looking for posts, you probably wannya make get requests to their image URLs to be able to use them. Rather than make you write `Danbooru.request(post.file_url)` over and over again, how about we make things simpler for you? This example uses `random`, but you could also just go to any valid index and it would still work.
 
 ```javascript
-var authBooru = new Danbooru('maidlover', 'maidsarecute');
+authBooru = new Danbooru('maidlover', 'maidsarecute');
 authBooru.search('maid', function(err, data) {
-    if(err) throw err;
-    data.random().favorite(); // Favoriting a random maid~ H-how bold!
+  if(err) throw err;
+  data.random().favorite(); // Favoriting a random maid~ H-how bold!
 });
 ```
 
