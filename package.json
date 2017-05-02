@@ -3,51 +3,31 @@
   "version": "1.4.8",
   "description": "danbooru api wrapper",
   "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
-    "build": "lsc -o lib src",
-    "doctoc": "doctoc --notitle README.md",
-    "clean": "rm -rf lib",
-    "test": "lsc test",
-    "prepublish": "npm run build",
-    "postpublish": "npm run clean"
+    "test": "tape test/*"
   },
   "repository": {
     "type": "git",
     "url": "git+https://stawberri@github.com/stawberri/danbooru-node.git"
   },
   "keywords": [
-    "wrapper",
-    "tags",
-    "tag",
-    "search",
-    "posts",
-    "post",
-    "manga",
-    "images",
-    "image",
-    "gallery",
-    "favorites",
-    "favorite",
     "danbooru",
     "booru",
     "api",
-    "anime"
+    "image",
+    "anime",
+    "manga"
   ],
-  "author": "Pudding <aideen@aideen.pw> (https://aideen.pw)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/stawberri/danbooru-node/issues"
   },
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
+  "author": "Pudding <aideen@aideen.pw> (https://aideen.pw/)",
   "devDependencies": {
-    "doctoc": "^1.0.0",
-    "livescript": "^1.4.0",
-    "nock": "^7.2.2",
-    "tape": "^4.5.1"
-  },
-  "dependencies": {
-    "args-js": "^0.10.11",
-    "extend": "^3.0.0",
-    "request": "^2.69.0"
+    "tape": "^4.6.3"
   }
 }
