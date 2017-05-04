@@ -10,13 +10,13 @@ test('post fetching', async t => {
       t.true(Array.isArray(posts), 'returns an array')
 
       let post = await booru.post(posts[0].id)
-      t.equal(post.raw.id, posts[0].raw.id, 'returns individual posts')
+      t.equal(post.id, posts[0].id, 'returns individual posts')
     }),
     booru.posts('animal_ears').then(async posts => {
       t.true(posts.every(post => post.tags.includes('animal_ears')), 'searches for tags')
 
       let post = await booru.post(posts[0])
-      t.deepEqual(post.raw, posts[0].raw, 'can be used instead of ids')
+      t.equal(post.id, posts[0].id, 'can be used instead of ids')
     }),
     booru.posts(['animal ears', '1girl']).then(posts =>
       t.true(posts.every(post => {
@@ -26,10 +26,22 @@ test('post fetching', async t => {
         )
       }), 'supports tag arrays')
     ),
-    booru.posts('rating:s').then(posts => {
+    booru.posts('rating:s filesize:..200kb').then(async posts => {
       t.true(posts.every(post => post.rating.s), 'has ratings')
+
+      let post = posts[0]
+      let buffer = await post.file.download()
+      t.equal(buffer.length, post.file.size, 'downloads correct size file')
+    }),
+    booru.posts({random: true, page: 3}).then(posts => {
+      let file = posts[0].file
+      t.equal(typeof file.md5, 'string', 'md5 is a string')
+      t.equal(typeof file.width, 'number', 'width is a number')
+      t.equal(typeof file.height, 'number', 'height is a number')
+      t.equal(typeof file.ext, 'string', 'ext is a string')
+      t.equal(typeof file.size, 'number', 'size is a number')
     })
-  ])
+  ]).catch(e => t.error(e))
 
   t.end()
 })

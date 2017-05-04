@@ -61,7 +61,7 @@ test('requestBody return value', async t => {
       t.equal(e.message, 'user is throttled', 'sets message')
       t.deepEqual(e.response.json, replyBody, 'contains original response')
     })
-  ])
+  ]).catch(e => t.error(e))
 
   for(let key in nocks) t.true(nocks[key].isDone(), key)
   t.end()
@@ -165,7 +165,7 @@ test('danbooru type errors', async t => {
     new Danbooru().requestBody('noterroragain').then(res => {
       t.deepEqual(res.json, notErrorAgain, 'does not throw error if no success')
     })
-  ])
+  ]).catch(e => t.error(e))
 
   t.true(nock.isDone(), 'performs requests')
   t.end()
@@ -222,7 +222,7 @@ test('querystring generator', async t => {
     booru.request('querytest', query),
     booru.request('arrayQuery', arrayQuery),
     booru.request('emptyquery', emptyQuery)
-  ])
+  ]).catch(e => t.error(e))
 
   t.true(nock.isDone(), 'sends queries correcctly')
   t.end()
