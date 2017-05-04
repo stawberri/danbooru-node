@@ -55,8 +55,8 @@ test('login and api_key instantiation', async t => {
 })
 
 test('safebooru shortcut', async t => {
-  t.true(new Danbooru.safe() instanceof Danbooru.safe, 'is a class')
-  t.true(new Danbooru.safe() instanceof Danbooru, 'extends Danbooru')
+  t.true(new Danbooru.Safebooru() instanceof Danbooru.Safebooru, 'is a class')
+  t.true(new Danbooru.Safebooru() instanceof Danbooru, 'extends Danbooru')
 
   nock.cleanAll()
   let safe = nock('https://safebooru.donmai.us')
@@ -65,7 +65,7 @@ test('safebooru shortcut', async t => {
     .reply(200)
 
   t.timeoutAfter(500)
-  await new Danbooru.safe('http://meow:nyaa@example.com/')
+  await new Danbooru.Safebooru('http://meow:nyaa@example.com/')
     .request('safe.json')
     .catch(e => t.error(e))
 

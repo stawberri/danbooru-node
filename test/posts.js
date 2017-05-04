@@ -26,20 +26,47 @@ test('post fetching', async t => {
         )
       }), 'supports tag arrays')
     ),
-    booru.posts('rating:s filesize:..200kb').then(async posts => {
-      t.true(posts.every(post => post.rating.s), 'has ratings')
-
-      let post = posts[0]
-      let buffer = await post.file.download()
-      t.equal(buffer.length, post.file.size, 'downloads correct size file')
+    booru.posts('rating:s original').then(posts => {
+      for(let post of posts) {
+        console.dir(post)
+        t.equal(post.rating.s, true, 'has ratings')
+        t.equal(typeof post.rating.locked, 'boolean', 'has rating lock status')
+      }
     }),
-    booru.posts({random: true, page: 3}).then(posts => {
-      let file = posts[0].file
-      t.equal(typeof file.md5, 'string', 'md5 is a string')
-      t.equal(typeof file.width, 'number', 'width is a number')
-      t.equal(typeof file.height, 'number', 'height is a number')
-      t.equal(typeof file.ext, 'string', 'ext is a string')
-      t.equal(typeof file.size, 'number', 'size is a number')
+    booru.posts({
+      random: true,
+      page: 3,
+      limit: 100,
+      tags: 'status:active filesize:..200kb'
+    }).then(async posts => {
+      let downloadFile
+      for(let post of posts) {
+        let file = post.file
+        if('request' in file) {
+          downloadFile = file
+          t.equal(typeof file.md5, 'string', 'has md5 as a string')
+          t.equal(typeof file.width, 'number', 'has width as a number')
+          t.equal(typeof file.height, 'number', 'has height as a number')
+          t.equal(typeof file.name, 'string', 'has name as a string')
+          t.equal(typeof file.ext, 'string', 'has ext as a string')
+          t.equal(file.ext, post.raw.file_ext, 'has correct extension')
+          t.equal(typeof file.size, 'number', 'has size as a number')
+          t.equal('large' in file, post.raw.has_large)
+        } else {
+          t.false('download' in file, 'does not have download')
+          t.false('name' in file, 'does not have name')
+          t.false('ext' in file, 'does not have ext')
+          t.false('md5' in file, 'does not have md5')
+        }
+      }
+
+      if(downloadFile) {
+        t.doesNotThrow(() => {
+          downloadFile.preview.download()
+        }, 'preview downloads successfully')
+        let buffer = await downloadFile.download()
+        t.equal(buffer.length, downloadFile.size, 'downloads correct size file')
+      }
     })
   ]).catch(e => t.error(e))
 
