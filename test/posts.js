@@ -28,7 +28,6 @@ test('post fetching', async t => {
     ),
     booru.posts('rating:s original').then(posts => {
       for(let post of posts) {
-        console.dir(post)
         t.equal(post.rating.s, true, 'has ratings')
         t.equal(typeof post.rating.locked, 'boolean', 'has rating lock status')
       }
