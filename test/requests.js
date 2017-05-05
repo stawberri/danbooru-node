@@ -14,18 +14,18 @@ test('additional request url features', async t => {
       nyaaa: 'meeew'
     }).basicAuth({user: 'nyaa', pass: 'meow'})
     .query({nyan: 'mew'})
-    .reply(200)
+    .reply(200, {})
 
   t.timeoutAfter(500)
   await new Danbooru('http://nyaa:meow@example.com/meow/')
-    .request('put /alt?nyan=mew', {nyaaa: 'meeew'})
+    .requestJson('put /alt?nyan=mew', {nyaaa: 'meeew'})
     .catch(e => t.error(e))
 
   t.true(alt.isDone(), 'sets baseURL, adds query strings properly, and supports other methods')
   t.end()
 })
 
-test('requestBody return value', async t => {
+test('requestJson return value', async t => {
   let bodyMeow = 'nyaa'
   let replyBody = {
     meowMeow: 'nyaaNyaa',
@@ -37,8 +37,7 @@ test('requestBody return value', async t => {
   let nocks = {
     'automatically sets post':
       nock('https://danbooru.donmai.us')
-        .post('/bodytest.json', {bodyMeow})
-        .times(2)
+        .post('/jsontest.json', {bodyMeow})
         .reply(200, replyBody),
     'sends method without body':
       nock('https://danbooru.donmai.us')
@@ -48,15 +47,10 @@ test('requestBody return value', async t => {
 
   t.timeoutAfter(500)
   await Promise.all([
-    new Danbooru().request('post bodytest', {bodyMeow}).then(res => {
-      t.false('body' in res, 'does not contain body by default')
-      t.false('json' in res, 'does not contain json by default')
+    new Danbooru().requestJson('post jsontest', {bodyMeow}).then(json => {
+      t.deepEqual(json, replyBody, 'returns json')
     }),
-    new Danbooru().requestBody('post bodytest', {bodyMeow}).then(res => {
-      t.equal(res.body, JSON.stringify(replyBody), 'contains body')
-      t.deepEqual(res.json, replyBody, 'contains json')
-    }),
-    new Danbooru().requestBody('delete throttle').then(res => {
+    new Danbooru().requestJson('delete throttle').then(res => {
       t.fail('does not ignore error status codes')
     }, e => {
       t.true(e instanceof Error, 'rejects an error')
@@ -92,7 +86,7 @@ test('requestBody follows redirects', async t => {
     .reply(307, replyBody, {location: 'should.fail'})
 
   t.timeoutAfter(500)
-  await new Danbooru().requestBody('redirect').then(res => {
+  await new Danbooru().requestJson('redirect').then(res => {
     t.fail('follows redirects')
   }, e => {
     t.true(e instanceof Error, 'rejects an error')
@@ -124,9 +118,9 @@ test('redirects maintain method, auth, and body', async t => {
     .reply(200, replyBody)
 
   t.timeoutAfter(500)
-  await new Danbooru(auth.user, auth.pass).requestBody('delete cat/tree', requestBody)
-    .then(res => {
-      t.deepEqual(res.json, replyBody, 'receives correct reply')
+  await new Danbooru(auth.user, auth.pass).requestJson('delete cat/tree', requestBody)
+    .then(json => {
+      t.deepEqual(json, replyBody, 'receives correct reply')
     })
 
   t.true(nock.isDone(), 'completes redirect')
@@ -144,29 +138,36 @@ test('danbooru type errors', async t => {
     .get('/okerror.json')
     .reply(200, okError)
     .get('/normalerror.json')
-    .reply(404, 'normal error')
+    .reply(404, '{}')
     .get('/infoerror.json')
     .reply(410, infoError)
     .get('/noterror.json')
     .reply(200, notError)
     .get('/noterroragain.json')
     .reply(200, notErrorAgain)
+    .get('/nonjsonerror.json')
+    .reply(200, 'meow')
 
   await Promise.all([
-    new Danbooru().requestBody('okerror').catch(e => {
+    new Danbooru().requestJson('okerror').catch(e => {
       t.equal(e.message, okError.message, 'throws error even on 200 if success is false')
     }),
-    new Danbooru().requestBody('normalerror').catch(e => {
+    new Danbooru().requestJson('normalerror').catch(e => {
       t.equal(e.message, 'not found', 'defaults to default error message')
     }),
-    new Danbooru().requestBody('infoerror').catch(e => {
+    new Danbooru().requestJson('infoerror').catch(e => {
       t.equal(e.message, infoError.message, 'sets message if given one')
     }),
-    new Danbooru().requestBody('noterror').then(res => {
-      t.deepEqual(res.json, notError, 'does not throw error if success is true')
+    new Danbooru().requestJson('noterror').then(json => {
+      t.deepEqual(json, notError, 'does not throw error if success is true')
     }),
-    new Danbooru().requestBody('noterroragain').then(res => {
-      t.deepEqual(res.json, notErrorAgain, 'does not throw error if no success')
+    new Danbooru().requestJson('noterroragain').then(json => {
+      t.deepEqual(json, notErrorAgain, 'does not throw error if no success')
+    }),
+    new Danbooru().requestJson('nonjsonerror').then(res => {
+      t.fail('throws non-json error')
+    }, () => {
+      t.pass('throws non-json error')
     })
   ]).catch(e => t.error(e))
 
@@ -211,20 +212,20 @@ test('querystring generator', async t => {
   nock('https://danbooru.donmai.us')
     .get('/querytest.json')
     .query(query)
-    .reply(200)
+    .reply(200, {})
     .get('/arrayQuery.json')
     .query(arrayQuery)
-    .reply(200)
+    .reply(200, {})
     .get('/emptyquery.json')
     .query(emptyQuery)
-    .reply(200)
+    .reply(200, {})
 
   let booru = new Danbooru()
   t.timeoutAfter(500)
   await Promise.all([
-    booru.request('querytest', query),
-    booru.request('arrayQuery', arrayQuery),
-    booru.request('emptyquery', emptyQuery)
+    booru.requestJson('querytest', query),
+    booru.requestJson('arrayQuery', arrayQuery),
+    booru.requestJson('emptyquery', emptyQuery)
   ]).catch(e => t.error(e))
 
   t.true(nock.isDone(), 'sends queries correcctly')

@@ -32,23 +32,23 @@ test('login and api_key instantiation', async t => {
   let noauth = nock('https://danbooru.donmai.us', {
     badheaders: ['authorization']
   }).get('/noauth.json')
-    .reply(200)
+    .reply(200, {})
 
   let comma = nock('https://danbooru.donmai.us')
     .get('/comma.json')
     .basicAuth({user, pass})
-    .reply(200)
+    .reply(200, {})
 
   let object = nock('https://danbooru.donmai.us')
     .get('/object.json')
     .basicAuth({user, pass})
-    .reply(200)
+    .reply(200, {})
 
   t.timeoutAfter(500)
   await Promise.all([
-    new Danbooru().request('/noauth'),
-    new Danbooru(login, api_key).request('/comma'),
-    new Danbooru({login, api_key}).request('/object')
+    new Danbooru().requestJson('/noauth'),
+    new Danbooru(login, api_key).requestJson('/comma'),
+    new Danbooru({login, api_key}).requestJson('/object')
   ]).catch(e => t.error(e))
 
   t.true(noauth.isDone(), 'makes unauthed requests')
@@ -65,11 +65,11 @@ test('safebooru shortcut', async t => {
   let safe = nock('https://safebooru.donmai.us')
     .get('/safe.json')
     .basicAuth({user: 'meow', pass: 'nyaa'})
-    .reply(200)
+    .reply(200, {})
 
   t.timeoutAfter(500)
   await new Danbooru.Safebooru('http://meow:nyaa@example.com/')
-    .request('safe.json')
+    .requestJson('safe.json')
     .catch(e => t.error(e))
 
   t.true(safe.isDone(), "doesn't override auth")
