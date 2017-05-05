@@ -1,8 +1,13 @@
 const test = require('tape')
 const Danbooru = require('..')
 
+test('begin posts', t => {
+  t.end()
+})
+
 test('post fetching', async t => {
   let booru = new Danbooru()
+  let safe = new Danbooru.Safebooru()
   t.timeoutAfter(30000)
 
   await Promise.all([
@@ -18,7 +23,7 @@ test('post fetching', async t => {
       let post = await booru.post(posts[0])
       t.equal(post.id, posts[0].id, 'can be used instead of ids')
     }),
-    booru.posts(['animal ears', '1girl']).then(posts =>
+    booru.posts(['animal_ears', '1girl']).then(posts =>
       t.true(posts.every(post => {
         return (
           post.tags.includes('animal_ears') &&
@@ -26,7 +31,7 @@ test('post fetching', async t => {
         )
       }), 'supports tag arrays')
     ),
-    booru.posts('rating:s original').then(posts => {
+    safe.posts('1girl original').then(posts => {
       let hasRatings = true
       let hasLockStatus = true
       for(let post of posts) {
@@ -142,5 +147,9 @@ test('post fetching', async t => {
     })
   ]).catch(e => t.error(e))
 
+  t.end()
+})
+
+test('end posts', t => {
   t.end()
 })

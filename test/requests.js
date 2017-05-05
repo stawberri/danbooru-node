@@ -2,7 +2,10 @@ const test = require('tape')
 const nock = require('nock')
 const Danbooru = require('..')
 
-nock.disableNetConnect()
+test('begin requests', t => {
+  nock.disableNetConnect()
+  t.end()
+})
 
 test('additional request url features', async t => {
   nock.cleanAll()
@@ -228,5 +231,8 @@ test('querystring generator', async t => {
   t.end()
 })
 
-nock.cleanAll()
-nock.enableNetConnect()
+test('end requests', t => {
+  nock.cleanAll()
+  nock.enableNetConnect()
+  t.end()
+})

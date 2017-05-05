@@ -2,7 +2,10 @@ const test = require('tape')
 const nock = require('nock')
 const Danbooru = require('..')
 
-nock.disableNetConnect()
+test('begin core', t => {
+  nock.disableNetConnect()
+  t.end()
+})
 
 test('module basics', t => {
   t.equal(typeof Danbooru, 'function', 'is a function')
@@ -73,5 +76,8 @@ test('safebooru shortcut', async t => {
   t.end()
 })
 
-nock.cleanAll()
-nock.enableNetConnect()
+test('end core', t => {
+  nock.cleanAll()
+  nock.enableNetConnect()
+  t.end()
+})
