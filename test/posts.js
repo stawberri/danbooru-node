@@ -27,10 +27,17 @@ test('post fetching', async t => {
       }), 'supports tag arrays')
     ),
     booru.posts('rating:s original').then(posts => {
+      let hasRatings = true
+      let hasLockStatus = true
       for(let post of posts) {
-        t.equal(post.rating.s, true, 'has ratings')
-        t.equal(typeof post.rating.locked, 'boolean', 'has rating lock status')
+        hasRatings = hasRatings && post.rating.s
+
+        hasLockStatus =
+          hasLockStatus &&
+          (typeof post.rating.locked === 'boolean')
       }
+      t.true(hasRatings, 'has ratings')
+      t.true(hasLockStatus, 'has rating lock status')
     }),
     booru.posts({
       random: true,
@@ -39,25 +46,43 @@ test('post fetching', async t => {
       tags: 'status:active filesize:..200kb'
     }).then(async posts => {
       let downloadFile
+
+      let prblm = {
+        md5: false, width: false, height: false, name: false, ext: false,
+        extMatch: false, size: false, large: false, ndownload: false,
+        nname: false, next: false, nmd5: false
+      }
       for(let post of posts) {
         let file = post.file
         if('request' in file) {
-          downloadFile = file
-          t.equal(typeof file.md5, 'string', 'has md5 as a string')
-          t.equal(typeof file.width, 'number', 'has width as a number')
-          t.equal(typeof file.height, 'number', 'has height as a number')
-          t.equal(typeof file.name, 'string', 'has name as a string')
-          t.equal(typeof file.ext, 'string', 'has ext as a string')
-          t.equal(file.ext, post.raw.file_ext, 'has correct extension')
-          t.equal(typeof file.size, 'number', 'has size as a number')
-          t.equal('large' in file, post.raw.has_large)
+          prblm.downloadFile = prblm.file
+          prblm.md5 = prblm.md5 || typeof file.md5 !== 'string'
+          prblm.width = prblm.width || typeof file.width !== 'number'
+          prblm.height = prblm.height || typeof file.height !== 'number'
+          prblm.name = prblm.name || typeof file.name !== 'string'
+          prblm.ext = prblm.ext || typeof file.ext !== 'string'
+          prblm.extMatch = prblm.extMatch || file.ext !== post.raw.file_ext
+          prblm.size = prblm.size || typeof file.size !== 'number'
+          prblm.large = prblm.large || 'large' in file !== post.raw.has_large
         } else {
-          t.false('download' in file, 'does not have download')
-          t.false('name' in file, 'does not have name')
-          t.false('ext' in file, 'does not have ext')
-          t.false('md5' in file, 'does not have md5')
+          prblm.ndownload = prblm.ndownload || 'download' in file
+          prblm.nname = prblm.nname || 'name' in file
+          prblm.next = prblm.next || 'ext' in file
+          prblm.nmd5 = prblm.nmd5 || 'md5' in file
         }
       }
+      t.false(prblm.md5, 'has md5 as a string')
+      t.false(prblm.width, 'has width as a number')
+      t.false(prblm.height, 'has height as a number')
+      t.false(prblm.name, 'has name as a string')
+      t.false(prblm.ext, 'has ext as a string')
+      t.false(prblm.extMatch, 'has correct extension')
+      t.false(prblm.size, 'has size as a number')
+      t.false(prblm.large, 'has matching large existence')
+      t.false(prblm.ndownload, 'does not have download')
+      t.false(prblm.nname, 'does not have name')
+      t.false(prblm.next, 'does not have ext')
+      t.false(prblm.nmd5, 'does not have md5')
 
       if(downloadFile) {
         t.doesNotThrow(() => {
