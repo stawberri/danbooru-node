@@ -56,7 +56,7 @@ test('requestBody return value', async t => {
     new Danbooru().requestBody('delete throttle').then(res => {
       t.fail('does not ignore error status codes')
     }, e => {
-      t.true(e instanceof Danbooru.Error, 'rejects an error')
+      t.true(e instanceof Error, 'rejects an error')
       t.equal(e.statusCode, 429, 'passes status code in error')
       t.equal(e.message, 'user is throttled', 'sets message')
       t.deepEqual(e.response.json, replyBody, 'contains original response')
@@ -92,7 +92,7 @@ test('requestBody follows redirects', async t => {
   await new Danbooru().requestBody('redirect').then(res => {
     t.fail('follows redirects')
   }, e => {
-    t.true(e instanceof Danbooru.Error, 'rejects an error')
+    t.true(e instanceof Error, 'rejects an error')
     t.equal(e.statusCode, 307, 'passes status code in error')
     t.equal(e.message, 'too many redirects', 'sets message')
     t.deepEqual(e.response.json, replyBody, 'contains original response')

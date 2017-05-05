@@ -110,8 +110,8 @@ test('post fetching', async t => {
       continued = true
 
       t.true(progressReports > 0, 'sends progress reports')
-      t.true(
-        error instanceof Danbooru.UserInitiatedError,
+      t.equal(
+        error.message, 'download aborted by user',
         'throws correct error'
       )
     })
