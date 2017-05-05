@@ -62,10 +62,58 @@ test('post fetching', async t => {
       if(downloadFile) {
         t.doesNotThrow(() => {
           downloadFile.preview.download()
-        }, 'preview downloads successfully')
-        let buffer = await downloadFile.download()
+        }, 'downloads preview successfully')
+
+        let download = downloadFile.download()
+
+        t.doesNotThrow(() => {
+          download = download.data(() => {})
+        }, 'exposes progress function')
+
+        let buffer = await download
         t.equal(buffer.length, downloadFile.size, 'downloads correct size file')
       }
+    }),
+    booru.posts({
+      random: true,
+      limit: 100,
+      tags: 'status:active filesize:5mb..'
+    }).then(async posts => {
+      let post = posts.find(post => 'request' in post.file)
+      if(!post) {
+        t.fail('did not give a downloadable file to test abort with')
+        return
+      }
+
+      let file = post.file
+
+      t.true(file.size >= 5e+6, 'gives files of expected size')
+
+      let progressReports = 0
+      let continued = false
+      let timeout
+      let error = await new Promise(resolve => {
+        let download = file.download()
+
+        download.then(() => {
+          t.fail('completed download during abort test')
+        }, err => resolve(err))
+
+        download.data((progress, total) => {
+          progressReports++
+          if(continued) t.fail('continued download during abort test')
+          if((progress / total) > 0.05) download.abort()
+        })
+
+        timeout = setTimeout(() => download.abort(), 500)
+      })
+      continued = true
+
+      t.true(progressReports > 0, 'sends progress reports')
+      t.true(
+        error instanceof Danbooru.UserInitiatedError,
+        'throws correct error'
+      )
     })
   ]).catch(e => t.error(e))
 
