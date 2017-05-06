@@ -30,5 +30,8 @@
   "devDependencies": {
     "nock": "^9.0.13",
     "tape": "^4.6.3"
+  },
+  "engines": {
+    "node": ">=7"
   }
 }

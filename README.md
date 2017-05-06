@@ -17,7 +17,8 @@ booru.posts('fox_ears smile').then(async posts => {
 })
 ```
 
-This module has been updated to require Node.js 7. You can still install version 1 with `npm install danbooru@1` and [read its documentation on Github](https://github.com/stawberri/danbooru-node/tree/v1.4.8).
+This module has been updated to require Node.js 7.  
+You can install version 1 with `npm install danbooru@1` and [read its documentation on Github](https://github.com/stawberri/danbooru-node/tree/v1.4.8).
 
 
 ## Danbooru class
