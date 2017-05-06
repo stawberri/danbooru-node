@@ -136,7 +136,7 @@ let md5 = file.md5
 let size = file.size
 
 // Start a http request for the file
-let httpResponse = file.request()
+// let httpResponse = file.request()
 // Or just get its data in a promise!
 let dataPromise = file.download()
 // Keep track of its download progress
@@ -156,17 +156,16 @@ Posts also have a `preview` thumbnail image, and a `large` preview image that is
 // Get thumbnail image
 let preview = post.file.preview
 // Preview images have less data associated with them
+// This set of data is also available to large preview images
 let name = preview.name
 let extension = preview.ext
-let data = preview.download()
-// Note that you should not call request() if you plan to call download().
-//   This is only for reference.
 let response = preview.request()
+let data = preview.download()
 
 // Large preview images do not always exist, so check if they exist first.
 if('large' in post.file) {
   let largePreview = post.file.large
-  let largeBuffer = await file.download()
+  let largeBuffer = await largePreview.download()
 }
 ```
 
@@ -197,10 +196,33 @@ This api wrapper is still missing a lot of things, so you can use its request me
 This function call returns a promise that resolves to a parsed json object. Any error encountered while trying to generate this object will be rejected.
 
 ```js
-let objectPromise = booru.request('METHOD path', {parameters})
+let objectPromise = booru.requestJson('METHOD path', {parameters})
 ```
 
 * objectPromise: A promise of the results of your api call
 * method: `GET`, `POST`, `PUT`, or `DELETE`. If you leave this out, it'll be a `GET` request.
-* path: Your api endpoint. Rhe beginning slash and `.json` are optional.
+* path: Your api endpoint. The beginning slash and `.json` are optional.
 * parameters: If this is a get request, this will be added to your querystring. It supports nested objects and arrays. If this is another type of request, it'll be sent as a json body.
+
+```js
+// GET /posts.json
+let data = await booru.requestJson('posts')
+
+// GET /posts.json?limit=5&tags=1girl
+let data = await booru.requestJson('posts', {limit: 5, tags: '1girl'})
+
+// GET /artists.json?search[id]=135024&search[is_active]=true
+let data = await booru.requestJson('artists', {
+  search: {
+    id: 135024,
+    is_active: true
+  }
+})
+
+// POST /favorites.json
+// body: {"post_id": 2689871}
+let data = await booru.requestJson('POST favorites', {post_id: 2689871})
+
+// DELETE /favorites/2689871.json
+let data = await booru.requestJson('DELETE favorites/2689871')
+```
