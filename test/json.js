@@ -12,7 +12,7 @@ test('request json', t => {
 
   t.timeoutAfter(5000)
   booru.requestJson('posts', {
-    md5: '0f9dfcbfd546fdf44420a131a026fe69'
+    md5: '685363c12c01393c5d10a6d706b1aa96'
   }).catch(e => {
     t.true(e instanceof Error, 'throws an error for non-json content')
   })

@@ -14,13 +14,13 @@ test('post fetching', async t => {
     booru.posts().then(async posts => {
       t.true(Array.isArray(posts), 'returns an array')
 
-      let post = await booru.post(posts[0].id)
+      let post = await booru.posts.get(posts[0].id)
       t.equal(post.id, posts[0].id, 'returns individual posts')
     }),
     booru.posts('animal_ears').then(async posts => {
       t.true(posts.every(post => post.tags.includes('animal_ears')), 'searches for tags')
 
-      let post = await booru.post(posts[0])
+      let post = await booru.posts.get(posts[0])
       t.equal(post.id, posts[0].id, 'can be used instead of ids')
     }),
     booru.posts(['animal_ears', '1girl']).then(posts =>

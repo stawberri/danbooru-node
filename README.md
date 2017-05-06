@@ -10,7 +10,7 @@ This package is an api wrapper intended to make [Danbooru's api](https://danboor
 const Danbooru = require('danbooru')
 
 let booru = new Danbooru()
-booru.posts('1girl cat_ears').then(async posts => {
+booru.posts('fox_ears smile').then(async posts => {
   let file = posts[0].file
   let data = await file.download()
   require('fs').writeFile(file.name, data))
@@ -64,14 +64,14 @@ This function returns a promise that resolves to an array of posts.
 
 ```js
 // Perform a simple search for a tag string or array of tags
-let postArray = await booru.posts('fox_ears maid')
-let postArray = await booru.posts(['fox_ears', 'maid'])
+let postArray = await booru.posts('fox_ears smile')
+let postArray = await booru.posts(['fox_ears', 'smile'])
 
 // Specify parameters
 let postArray = await booru.posts({
   limit: 100,
   page: 1,
-  tags: 'fox_ears maid',
+  tags: 'fox_ears smile',
   random: true
 })
 ```
@@ -81,7 +81,7 @@ If you know the numerical ID of a post, you can fetch it directly. This function
 
 ```js
 // Fetch a single post
-let post = await booru.post(2596801)
+let post = await booru.posts.get(2689871)
 ```
 
 
@@ -91,8 +91,8 @@ This module parses posts and restructures them into an instance of `Post`.
 ```js
 // Get the id of a post as an integer or a string
 let id = post.id
-let id = +post.id
-let id = String(post.id)
+let id = +post
+let id = String(post)
 
 // Get a post's raw data, as received from the server
 let data = post.raw
@@ -169,3 +169,38 @@ if('large' in post.file) {
   let largeBuffer = await file.download()
 }
 ```
+
+
+## Favorites
+The `Danbooru` object exposes a function for fetching and setting favorites.
+
+This will throw an error with an unauthenticated session.
+
+```js
+// Get a post array of your favorites
+let favoriteArray = await booru.favorites()
+
+// Add a favorite
+// Returns a promise that resolves true on success, throws on error
+let success = await booru.favorites.add(2689871)
+let success = await booru.favorites.add(post) // Or use a post object
+
+// Remove a favorite
+let success = await booru.favorites.delete(2689871, false)
+let success = await booru.favorites.delete(post, false)
+```
+
+
+## Custom requests
+This api wrapper is still missing a lot of things, so you can use its request method directly to access endpoints that haven't been wrapped yet.
+
+This function call returns a promise that resolves to a parsed json object. Any error encountered while trying to generate this object will be rejected.
+
+```js
+let objectPromise = booru.request('METHOD path', {parameters})
+```
+
+* objectPromise: A promise of the results of your api call
+* method: `GET`, `POST`, `PUT`, or `DELETE`. If you leave this out, it'll be a `GET` request.
+* path: Your api endpoint. Rhe beginning slash and `.json` are optional.
+* parameters: If this is a get request, this will be added to your querystring. It supports nested objects and arrays. If this is another type of request, it'll be sent as a json body.
