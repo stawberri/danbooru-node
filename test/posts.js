@@ -23,14 +23,24 @@ test('post fetching', async t => {
       let post = await booru.posts.get(posts[0])
       t.equal(post.id, posts[0].id, 'can be used instead of ids')
     }),
-    booru.posts(['animal_ears', '1girl']).then(posts =>
+    booru.posts(['animal_ears', '1girl']).then(posts => {
       t.true(posts.every(post => {
         return (
           post.tags.includes('animal_ears') &&
           post.tags.includes('1girl')
         )
       }), 'supports tag arrays')
-    ),
+
+      t.true(posts.every(post => {
+        return (
+          post.tags[0] !== '' &&
+          post.tags.artist[0] !== '' &&
+          post.tags.character[0] !== '' &&
+          post.tags.copyright[0] !== '' &&
+          post.tags.general[0] !== ''
+        )
+      }), 'no empty string tag arrays')
+    }),
     safe.posts('1girl original').then(posts => {
       let hasRatings = true
       let hasLockStatus = true
