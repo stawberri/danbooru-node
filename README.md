@@ -1,2 +1,3 @@
-# danbooru-node
+# danbooru
+
 danbooru api wrapper
