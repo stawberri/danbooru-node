@@ -1,0 +1,8 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.autoFixOnSave": true,
+  "cSpell.words": [
+    "booru",
+    "danbooru"
+  ]
+}

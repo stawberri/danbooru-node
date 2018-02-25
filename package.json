@@ -25,6 +25,10 @@
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
   "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)",
   "devDependencies": {
-    "jest": "^22.4.2"
+    "eslint": "^4.18.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "jest": "^22.4.2",
+    "prettier": "^1.10.2"
   }
 }
