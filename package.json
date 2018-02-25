@@ -4,7 +4,7 @@
   "description": "danbooru api wrapper",
   "main": "index.js",
   "scripts": {
-    "test": ""
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
     "url": "https://github.com/stawberri/danbooru-node/issues"
   },
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
-  "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)"
+  "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)",
+  "devDependencies": {
+    "jest": "^22.4.2"
+  }
 }
