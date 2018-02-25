@@ -3,7 +3,6 @@
   "eslint.autoFixOnSave": true,
   "cSpell.words": [
     "booru",
-    "danbooru",
-    "requestable"
+    "danbooru"
   ]
 }
