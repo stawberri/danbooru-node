@@ -4,8 +4,7 @@
   "description": "danbooru api wrapper",
   "main": "lib",
   "scripts": {
-    "lint": "eslint **/*.js",
-    "test": "jest"
+    "test": "eslint **/*.js && jest"
   },
   "repository": {
     "type": "git",
