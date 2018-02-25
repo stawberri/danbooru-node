@@ -39,7 +39,7 @@ describe('booru constructor', () => {
   })
 
   test('cleans urls', () => {
-    expect(new Booru('http://hijiribe.donmai.us/?query#hash').url).toBe(
+    expect(new Booru('http://hijiribe.donmai.us////?query#hash').url).toBe(
       'http://hijiribe.donmai.us/'
     )
   })
