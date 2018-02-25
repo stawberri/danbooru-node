@@ -3,11 +3,8 @@
   "version": "2.0.3",
   "description": "danbooru api wrapper",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "tape test/*"
+    "test": ""
   },
   "repository": {
     "type": "git",
@@ -21,17 +18,10 @@
     "anime",
     "manga"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/stawberri/danbooru-node/issues"
   },
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
-  "author": "Pudding <aideen@aideen.pw> (https://aideen.pw/)",
-  "devDependencies": {
-    "nock": "^9.0.13",
-    "tape": "^4.6.3"
-  },
-  "engines": {
-    "node": ">=7"
-  }
+  "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)"
 }
