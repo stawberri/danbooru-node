@@ -10,7 +10,14 @@
     "type": "git",
     "url": "git+https://stawberri@github.com/stawberri/danbooru-node.git"
   },
-  "keywords": ["danbooru", "booru", "api", "image", "anime", "manga"],
+  "keywords": [
+    "danbooru",
+    "booru",
+    "api",
+    "image",
+    "anime",
+    "manga"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/stawberri/danbooru-node/issues"
@@ -18,10 +25,12 @@
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
   "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)",
   "devDependencies": {
+    "babel-eslint": "^8.2.2",
     "eslint": "^4.18.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.0",
     "jest": "^22.4.2",
+    "nock": "^9.2.1",
     "prettier": "^1.10.2"
   }
 }

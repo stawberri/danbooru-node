@@ -1,8 +1,5 @@
-jest.mock('http').mock('https')
-
+const nock = require('nock')
 const Endpoint = require('../lib/endpoint')
-// const http = require('http')
-// const https = require('https')
 
 describe('endpoint constructor', () => {
   test('used by main export', () => {
@@ -26,30 +23,53 @@ describe('endpoint constructor', () => {
   })
 
   test('saves login', () => {
-    const endpoint = new Endpoint('meow:nyan')
+    const endpoint = new Endpoint('login:api_key')
     expect(endpoint).toMatchObject({
-      user: 'meow',
+      user: 'login',
       url: 'https://danbooru.donmai.us/'
     })
   })
 
   test('saves login and url', () => {
-    const endpoint = new Endpoint('https://meow:nyan@safebooru.donmai.us/')
+    const endpoint = new Endpoint('https://login:api_key@safebooru.donmai.us')
     expect(endpoint).toMatchObject({
-      user: 'meow',
+      user: 'login',
       url: 'https://safebooru.donmai.us/'
     })
   })
 
   test('cleans urls', () => {
-    expect(new Endpoint('http://hijiribe.donmai.us/?nyan#meow').url).toBe(
+    expect(new Endpoint('http://hijiribe.donmai.us/?query#hash').url).toBe(
       'http://hijiribe.donmai.us/'
     )
   })
 
-  test('adds missing url parts', () => {
-    expect(new Endpoint('http://sonohara.donmai.us').url).toBe(
-      'http://sonohara.donmai.us/'
+  test('supports paths', () => {
+    expect(new Endpoint('http://sonohara.donmai.us/path').url).toBe(
+      'http://sonohara.donmai.us/path/'
     )
+  })
+})
+
+describe('endpoint connectivity', () => {
+  test('makes requests', done => {
+    const scope = nock('https://danbooru.donmai.us')
+      .get('/resource')
+      .reply(200, 'reply')
+
+    const endpoint = new Endpoint()
+    endpoint
+      .request({ path: '/resource' }, response => {
+        expect(response.statusCode).toBe(200)
+
+        let data = ''
+        response.on('data', chunk => (data += chunk)).on('end', () => {
+          expect(data).toBe('reply')
+          expect(scope.isDone()).toBeTruthy()
+
+          done()
+        })
+      })
+      .end()
   })
 })
