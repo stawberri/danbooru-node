@@ -1,9 +1,9 @@
-const nock = require('nock')
+const Danbooru = require('..')
 const Booru = require('../lib/booru')
+const nock = require('nock')
 
 describe('booru constructor', () => {
   test('used by main export', () => {
-    const Danbooru = require('..')
     expect(new Danbooru()).toBeInstanceOf(Booru)
   })
 
@@ -54,12 +54,12 @@ describe('booru constructor', () => {
 describe('booru connectivity', () => {
   test('makes requests', done => {
     const scope = nock('https://danbooru.donmai.us')
-      .get('/resource')
+      .get('/makes-requests')
       .reply(200, 'reply')
 
     const booru = new Booru()
     booru
-      .request({ path: '/resource' }, response => {
+      .request({ path: '/makes-requests' }, response => {
         expect(response.statusCode).toBe(200)
 
         let data = ''
@@ -71,5 +71,97 @@ describe('booru connectivity', () => {
         })
       })
       .end()
+  })
+
+  test('handles json', async () => {
+    const requestBody = {
+      key: 'value',
+      boolean: false,
+      number: 123
+    }
+
+    const responseBody = {
+      response: true,
+      array: [1, false, 'string', { key: 'value' }]
+    }
+
+    const scope = nock('http://safebooru.donmai.us', {
+      reqheaders: { 'content-type': 'application/json' }
+    })
+      .post('/handles-json.json', requestBody)
+      .reply(200, responseBody)
+
+    const booru = new Booru('http://safebooru.donmai.us')
+    const response = await booru.json('handles-json', {
+      method: 'POST',
+      body: requestBody
+    })
+
+    expect(response[Danbooru.statusCode]).toBe(200)
+    expect(response).toMatchObject(responseBody)
+    expect(scope.isDone()).toBeTruthy()
+  })
+
+  test('has correct auth and queries', async () => {
+    const query = {
+      key: 'value',
+      number: 123,
+      array: [
+        { arrayKey: 'arrayValue' },
+        'string',
+        {
+          arrayObjectKey: 'arrayObjectValue',
+          arrayObjectArray: [1, 2, 3, false]
+        }
+      ]
+    }
+
+    const scope = nock('https://sonohara.donmai.us', {
+      badheaders: ['content-type']
+    })
+      .get('/path/has-correct-auth-and-queries.json')
+      .basicAuth({ user: 'login', pass: 'api_key' })
+      .query(query)
+      .reply(204)
+
+    const booru = new Booru('https://login:api_key@sonohara.donmai.us/path')
+    const response = await booru.json('/has-correct-auth-and-queries', {
+      query
+    })
+
+    expect(response[Danbooru.statusCode]).toBe(204)
+    expect(scope.isDone()).toBeTruthy()
+  })
+
+  test('resolves parsing errors', async () => {
+    const body = 'non-json string'
+    const scope = nock('https://danbooru.donmai.us')
+      .get('/resolves-parsing-errors.json')
+      .reply(200, body)
+
+    const booru = new Booru()
+    const response = await booru.json('resolves-parsing-errors')
+
+    expect(response).toBeInstanceOf(Error)
+    expect(response).toMatchObject({
+      [Danbooru.statusCode]: 200,
+      [Danbooru.data]: body
+    })
+    expect(scope.isDone()).toBeTruthy()
+  })
+
+  test('has headers', async () => {
+    const reqheaders = {
+      key: 'value',
+      number: '123'
+    }
+
+    const scope = nock('https://danbooru.donmai.us', { reqheaders })
+      .get('/has-headers.json')
+      .reply(204)
+
+    const booru = new Booru()
+    await booru.json('has-headers', { headers: reqheaders })
+    expect(scope.isDone()).toBeTruthy()
   })
 })
