@@ -3,26 +3,26 @@ const Booru = require('../lib/booru')
 const nock = require('nock')
 
 describe('booru constructor', () => {
-  test('used by main export', () => {
+  test('danbooru extends booru', () => {
     expect(new Danbooru()).toBeInstanceOf(Booru)
   })
 
-  test('defaults to undefined login', () => {
+  test('default authentication', () => {
     const booru = new Booru()
     expect(booru.user).toBeUndefined()
   })
 
-  test('has undefined login if no key is provided', () => {
+  test('key is required for authentication', () => {
     const booru = new Booru('meow')
     expect(booru.user).toBeUndefined()
   })
 
-  test('defaults to main url', () => {
+  test('default url', () => {
     const booru = new Booru()
     expect(booru.url).toBe('https://danbooru.donmai.us/')
   })
 
-  test('saves login', () => {
+  test('authentication', () => {
     const booru = new Booru('login:api_key')
     expect(booru).toMatchObject({
       user: 'login',
@@ -30,7 +30,7 @@ describe('booru constructor', () => {
     })
   })
 
-  test('saves login and url', () => {
+  test('authentication and custom url', () => {
     const booru = new Booru('https://login:api_key@safebooru.donmai.us')
     expect(booru).toMatchObject({
       user: 'login',
@@ -38,13 +38,13 @@ describe('booru constructor', () => {
     })
   })
 
-  test('cleans urls', () => {
+  test('url with extra components', () => {
     expect(new Booru('http://hijiribe.donmai.us////?query#hash').url).toBe(
       'http://hijiribe.donmai.us/'
     )
   })
 
-  test('supports paths', () => {
+  test('path with missing end slash', () => {
     expect(new Booru('http://sonohara.donmai.us/path').url).toBe(
       'http://sonohara.donmai.us/path/'
     )
@@ -52,13 +52,13 @@ describe('booru constructor', () => {
 })
 
 describe('booru connectivity', () => {
-  test('makes requests', done => {
+  test('basic node request', done => {
     const scope = nock('https://danbooru.donmai.us')
-      .get('/makes-requests')
+      .get('/a23cb13b8b18')
       .reply(200, 'reply')
 
     const booru = new Booru()
-    const [type, val] = booru.request({ path: '/makes-requests' })
+    const [type, val] = booru.request({ path: '/a23cb13b8b18' })
 
     expect(type).toBe('request')
     val.on('response', response => {
@@ -74,7 +74,7 @@ describe('booru connectivity', () => {
     })
   })
 
-  test('handles json', async () => {
+  test('json request and response', async () => {
     const requestBody = {
       key: 'value',
       boolean: false,
@@ -89,11 +89,11 @@ describe('booru connectivity', () => {
     const scope = nock('http://safebooru.donmai.us', {
       reqheaders: { 'content-type': 'application/json' }
     })
-      .post('/handles-json.json', requestBody)
+      .post('/445d6c4c8393.json', requestBody)
       .reply(200, responseBody)
 
     const booru = new Booru('http://safebooru.donmai.us')
-    const response = await booru.json('handles-json', {
+    const response = await booru.json('445d6c4c8393', {
       method: 'POST',
       body: requestBody
     })
@@ -103,7 +103,7 @@ describe('booru connectivity', () => {
     expect(scope.isDone()).toBeTruthy()
   })
 
-  test('has correct auth and queries', async () => {
+  test('basic auth and query string', async () => {
     const query = {
       key: 'value',
       number: 123,
@@ -120,13 +120,13 @@ describe('booru connectivity', () => {
     const scope = nock('https://sonohara.donmai.us', {
       badheaders: ['content-type']
     })
-      .get('/path/has-correct-auth-and-queries.json')
+      .get('/path/27f565dbb75e.json')
       .basicAuth({ user: 'login', pass: 'api_key' })
       .query(query)
       .reply(204)
 
     const booru = new Booru('https://login:api_key@sonohara.donmai.us/path')
-    const response = await booru.json('/has-correct-auth-and-queries', {
+    const response = await booru.json('/27f565dbb75e', {
       query
     })
 
@@ -134,14 +134,14 @@ describe('booru connectivity', () => {
     expect(scope.isDone()).toBeTruthy()
   })
 
-  test('resolves parsing errors', async () => {
+  test('non-json response', async () => {
     const body = 'non-json string'
     const scope = nock('https://danbooru.donmai.us')
-      .get('/resolves-parsing-errors.json')
+      .get('/d0869d2a257e.json')
       .reply(200, body)
 
     const booru = new Booru()
-    const response = await booru.json('resolves-parsing-errors')
+    const response = await booru.json('d0869d2a257e')
 
     expect(response).toBeInstanceOf(Error)
     expect(response).toMatchObject({
@@ -151,7 +151,7 @@ describe('booru connectivity', () => {
     expect(scope.isDone()).toBeTruthy()
   })
 
-  test('has headers', async () => {
+  test('request and response headers', async () => {
     const reqheaders = {
       key: 'value',
       number: '123'
@@ -163,11 +163,11 @@ describe('booru connectivity', () => {
     }
 
     const scope = nock('https://danbooru.donmai.us', { reqheaders })
-      .get('/has-headers.json')
+      .get('/72f0c1717941.json')
       .reply(123, 'non-json response', resHeaders)
 
     const booru = new Booru()
-    const response = await booru.json('has-headers', { headers: reqheaders })
+    const response = await booru.json('/72f0c1717941', { headers: reqheaders })
     expect(response).toBeInstanceOf(Error)
     expect(response).toMatchObject({
       [Danbooru.status]: 123,
