@@ -58,19 +58,20 @@ describe('booru connectivity', () => {
       .reply(200, 'reply')
 
     const booru = new Booru()
-    booru
-      .request({ path: '/makes-requests' }, response => {
-        expect(response.statusCode).toBe(200)
+    const [type, val] = booru.request({ path: '/makes-requests' })
 
-        let data = ''
-        response.on('data', chunk => (data += chunk)).on('end', () => {
-          expect(data).toBe('reply')
-          expect(scope.isDone()).toBeTruthy()
+    expect(type).toBe('request')
+    val.on('response', response => {
+      expect(response.statusCode).toBe(200)
 
-          done()
-        })
+      let data = ''
+      response.on('data', chunk => (data += chunk)).on('end', () => {
+        expect(data).toBe('reply')
+        expect(scope.isDone()).toBeTruthy()
+
+        done()
       })
-      .end()
+    })
   })
 
   test('handles json', async () => {
@@ -97,7 +98,7 @@ describe('booru connectivity', () => {
       body: requestBody
     })
 
-    expect(response[Danbooru.statusCode]).toBe(200)
+    expect(response[Danbooru.status]).toBe(200)
     expect(response).toMatchObject(responseBody)
     expect(scope.isDone()).toBeTruthy()
   })
@@ -129,7 +130,7 @@ describe('booru connectivity', () => {
       query
     })
 
-    expect(response[Danbooru.statusCode]).toBe(204)
+    expect(response[Danbooru.status]).toBe(204)
     expect(scope.isDone()).toBeTruthy()
   })
 
@@ -144,7 +145,7 @@ describe('booru connectivity', () => {
 
     expect(response).toBeInstanceOf(Error)
     expect(response).toMatchObject({
-      [Danbooru.statusCode]: 200,
+      [Danbooru.status]: 200,
       [Danbooru.data]: body
     })
     expect(scope.isDone()).toBeTruthy()
@@ -156,12 +157,23 @@ describe('booru connectivity', () => {
       number: '123'
     }
 
+    const resHeaders = {
+      resKey: 'resValue',
+      resNumber: '456'
+    }
+
     const scope = nock('https://danbooru.donmai.us', { reqheaders })
       .get('/has-headers.json')
-      .reply(204)
+      .reply(123, 'non-json response', resHeaders)
 
     const booru = new Booru()
-    await booru.json('has-headers', { headers: reqheaders })
+    const response = await booru.json('has-headers', { headers: reqheaders })
+    expect(response).toBeInstanceOf(Error)
+    expect(response).toMatchObject({
+      [Danbooru.status]: 123,
+      [Danbooru.data]: 'non-json response',
+      [Danbooru.headers]: resHeaders
+    })
     expect(scope.isDone()).toBeTruthy()
   })
 })
