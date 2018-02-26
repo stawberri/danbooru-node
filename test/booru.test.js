@@ -13,7 +13,7 @@ describe('booru constructor', () => {
   })
 
   test('key is required for authentication', () => {
-    const booru = new Booru('meow')
+    const booru = new Booru('optical:')
     expect(booru.user).toBeUndefined()
   })
 
@@ -23,23 +23,23 @@ describe('booru constructor', () => {
   })
 
   test('authentication', () => {
-    const booru = new Booru('login:api_key')
+    const booru = new Booru('olive:index')
     expect(booru).toMatchObject({
-      user: 'login',
+      user: 'olive',
       url: 'https://danbooru.donmai.us/'
     })
   })
 
   test('authentication and custom url', () => {
-    const booru = new Booru('https://login:api_key@safebooru.donmai.us')
+    const booru = new Booru('https://digitized:generating@safebooru.donmai.us')
     expect(booru).toMatchObject({
-      user: 'login',
+      user: 'digitized',
       url: 'https://safebooru.donmai.us/'
     })
   })
 
   test('url with extra components', () => {
-    expect(new Booru('http://hijiribe.donmai.us////?query#hash').url).toBe(
+    expect(new Booru('http://hijiribe.donmai.us////?hack#redundant').url).toBe(
       'http://hijiribe.donmai.us/'
     )
   })
@@ -55,7 +55,7 @@ describe('booru connectivity', () => {
   test('basic node request', done => {
     const scope = nock('https://danbooru.donmai.us')
       .get('/a23cb13b8b18')
-      .reply(200, 'reply')
+      .reply(200, 'synthesize')
 
     const booru = new Booru()
     const [type, val] = booru.request({ path: '/a23cb13b8b18' })
@@ -66,7 +66,7 @@ describe('booru connectivity', () => {
 
       let data = ''
       response.on('data', chunk => (data += chunk)).on('end', () => {
-        expect(data).toBe('reply')
+        expect(data).toBe('synthesize')
         expect(scope.isDone()).toBeTruthy()
 
         done()
@@ -76,14 +76,14 @@ describe('booru connectivity', () => {
 
   test('json request and response', async () => {
     const requestBody = {
-      key: 'value',
-      boolean: false,
-      number: 123
+      reboot: 'Utah channels bandwidth',
+      outdoors: true,
+      quality: 45183
     }
 
     const responseBody = {
-      response: true,
-      array: [1, false, 'string', { key: 'value' }]
+      borders: false,
+      virtual: [83757, true, 'real-time Executive', { seamless: 'auxiliary' }]
     }
 
     const scope = nock('http://safebooru.donmai.us', {
@@ -105,14 +105,14 @@ describe('booru connectivity', () => {
 
   test('basic auth and query string', async () => {
     const query = {
-      key: 'value',
-      number: 123,
-      array: [
-        { arrayKey: 'arrayValue' },
-        'string',
+      overriding: 'Checking Account standardization South Carolina',
+      interfaces: 40999,
+      quantifying: [
+        { multiByte: 'Handcrafted Rubber Wyoming' },
+        'transmitting payment partnerships Configuration niches',
         {
-          arrayObjectKey: 'arrayObjectValue',
-          arrayObjectArray: [1, 2, 3, false]
+          circuit: 'optical withdrawal Mouse',
+          whiteboard: [87010, 50573, 98440, true]
         }
       ]
     }
@@ -121,11 +121,11 @@ describe('booru connectivity', () => {
       badheaders: ['content-type']
     })
       .get('/path/27f565dbb75e.json')
-      .basicAuth({ user: 'login', pass: 'api_key' })
+      .basicAuth({ user: 'turquoise', pass: 'with' })
       .query(query)
       .reply(204)
 
-    const booru = new Booru('https://login:api_key@sonohara.donmai.us/path')
+    const booru = new Booru('https://turquoise:with@sonohara.donmai.us/path')
     const response = await booru.json('/27f565dbb75e', {
       query
     })
@@ -135,7 +135,7 @@ describe('booru connectivity', () => {
   })
 
   test('non-json response', async () => {
-    const body = 'non-json string'
+    const body = 'Well Forest Intelligent Soft Car'
     const scope = nock('https://danbooru.donmai.us')
       .get('/d0869d2a257e.json')
       .reply(200, body)
@@ -153,25 +153,28 @@ describe('booru connectivity', () => {
 
   test('request and response headers', async () => {
     const reqheaders = {
-      key: 'value',
-      number: '123'
+      global: 'user-facing Somali Shilling Frozen',
+      mobile: 'Romania primary Customer'
     }
 
     const resHeaders = {
-      resKey: 'resValue',
-      resNumber: '456'
+      withdrawal: 'Legacy RSS quantifying',
+      online: 'Agent Administrator International',
+      monetize: 'Checking Account withdrawal'
     }
+
+    const body = 'Analyst Cook Islands Integration'
 
     const scope = nock('https://danbooru.donmai.us', { reqheaders })
       .get('/72f0c1717941.json')
-      .reply(123, 'non-json response', resHeaders)
+      .reply(123, body, resHeaders)
 
     const booru = new Booru()
     const response = await booru.json('/72f0c1717941', { headers: reqheaders })
     expect(response).toBeInstanceOf(Error)
     expect(response).toMatchObject({
       [Danbooru.status]: 123,
-      [Danbooru.data]: 'non-json response',
+      [Danbooru.data]: body,
       [Danbooru.headers]: resHeaders
     })
     expect(scope.isDone()).toBeTruthy()
