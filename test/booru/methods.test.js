@@ -1,7 +1,7 @@
 const Danbooru = require('../..')
 const nock = require('nock')
 
-afterEach(() => nock.cleanAll())
+beforeEach(() => nock.cleanAll())
 
 test('get', async () => {
   const reply = { microchip: 53142 }

@@ -1,7 +1,7 @@
 const Danbooru = require('../..')
 const nock = require('nock')
 
-afterEach(() => nock.cleanAll())
+beforeEach(() => nock.cleanAll())
 
 test('listing', async () => {
   const params = { limit: 97, tags: 'override gorgeous' }

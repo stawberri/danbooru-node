@@ -1,7 +1,7 @@
 const Danbooru = require('../..')
 const nock = require('nock')
 
-afterEach(() => nock.cleanAll())
+beforeEach(() => nock.cleanAll())
 
 test('basic node request', done => {
   const scope = nock('https://danbooru.donmai.us')
