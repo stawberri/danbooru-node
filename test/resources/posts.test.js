@@ -1,6 +1,8 @@
 const Danbooru = require('../..')
 const nock = require('nock')
 
+afterEach(() => nock.cleanAll())
+
 test('listing', async () => {
   const params = { limit: 97, tags: 'override gorgeous' }
   const reply = { quantifying: 'magenta azure approach' }
@@ -10,8 +12,8 @@ test('listing', async () => {
     .query(params)
     .reply(200, reply)
 
-  const danbooru = new Danbooru()
-  expect(await danbooru.posts(params)).toMatchObject(reply)
+  const booru = new Danbooru()
+  expect(await booru.posts(params)).toMatchObject(reply)
   expect(scope.isDone()).toBeTruthy()
 })
 
@@ -23,9 +25,7 @@ test('show', async () => {
     .get(`/posts/${id}.json`)
     .reply(200, reply)
 
-  const danbooru = new Danbooru()
-  expect(await danbooru.posts(id)).toMatchObject(reply)
+  const booru = new Danbooru()
+  expect(await booru.posts(id)).toMatchObject(reply)
   expect(scope.isDone()).toBeTruthy()
 })
-
-afterEach(() => nock.cleanAll())

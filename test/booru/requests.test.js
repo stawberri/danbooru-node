@@ -1,13 +1,14 @@
 const Danbooru = require('../..')
-const Booru = require('../../lib/booru')
 const nock = require('nock')
+
+afterEach(() => nock.cleanAll())
 
 test('basic node request', done => {
   const scope = nock('https://danbooru.donmai.us')
     .get('/a23cb13b8b18')
     .reply(200, 'synthesize')
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const [type, val] = booru.request({ path: '/a23cb13b8b18' })
 
   expect(type).toBe('request')
@@ -42,7 +43,7 @@ test('json request and response', async () => {
     .post('/445d6c4c8393.json', requestBody)
     .reply(200, responseBody)
 
-  const booru = new Booru('http://safebooru.donmai.us')
+  const booru = new Danbooru('http://safebooru.donmai.us')
   const response = await booru.json('445d6c4c8393', {
     method: 'POST',
     body: requestBody
@@ -75,7 +76,7 @@ test('basic auth and query string', async () => {
     .query(query)
     .reply(204)
 
-  const booru = new Booru('https://turquoise:with@sonohara.donmai.us/path')
+  const booru = new Danbooru('https://turquoise:with@sonohara.donmai.us/path')
   const response = await booru.json('/27f565dbb75e', {
     query
   })
@@ -90,7 +91,7 @@ test('non-json response', async () => {
     .get('/d0869d2a257e.json')
     .reply(200, body)
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const response = await booru.json('d0869d2a257e')
 
   expect(response).toBeInstanceOf(Error)
@@ -119,7 +120,7 @@ test('request and response headers', async () => {
     .get('/72f0c1717941.json')
     .reply(123, body, resHeaders)
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const response = await booru.json('/72f0c1717941', { headers: reqheaders })
   expect(response).toBeInstanceOf(Error)
   expect(response).toMatchObject({
@@ -142,7 +143,7 @@ test('query, body, and arrays', async () => {
     .query(query)
     .reply(200, reply)
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const response = await booru.json('9b05655a2aa5', {
     method: 'PUT',
     body,
@@ -153,5 +154,3 @@ test('query, body, and arrays', async () => {
   expect(response).toHaveLength(reply.length)
   expect(scope.isDone()).toBeTruthy()
 })
-
-afterEach(() => nock.cleanAll())

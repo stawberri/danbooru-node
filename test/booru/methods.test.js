@@ -1,5 +1,7 @@
-const Booru = require('../../lib/booru')
+const Danbooru = require('../..')
 const nock = require('nock')
+
+afterEach(() => nock.cleanAll())
 
 test('get', async () => {
   const reply = { microchip: 53142 }
@@ -10,7 +12,7 @@ test('get', async () => {
     .query(query)
     .reply(200, reply)
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const response = await booru.get('f9d4f26b44cf', query)
 
   expect(response).toMatchObject(reply)
@@ -27,7 +29,7 @@ test('post', async () => {
     .post('/fee2f342fbd8.json', body)
     .reply(200, reply)
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const response = await booru.post('/fee2f342fbd8', body)
 
   expect(response).toMatchObject(reply)
@@ -44,7 +46,7 @@ test('put', async () => {
     .put('/ff33fdc4894e.json', body)
     .reply(200, reply)
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const response = await booru.put('/ff33fdc4894e', body)
 
   expect(response).toMatchObject(reply)
@@ -61,11 +63,9 @@ test('delete', async () => {
     .delete('/77af4d0af0e9.json', body)
     .reply(200, reply)
 
-  const booru = new Booru()
+  const booru = new Danbooru()
   const response = await booru.delete('/77af4d0af0e9', body)
 
   expect(response).toMatchObject(reply)
   expect(scope.isDone()).toBeTruthy()
 })
-
-afterEach(() => nock.cleanAll())
