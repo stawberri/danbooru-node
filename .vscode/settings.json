@@ -6,6 +6,7 @@
     "booru",
     "danbooru",
     "reqheaders",
-    "truthy"
+    "truthy",
+    "unvote"
   ]
 }
