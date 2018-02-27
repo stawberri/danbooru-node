@@ -36,6 +36,12 @@ test('root paths turn relative', () => {
   expect(href).toBe('https://danbooru.donmai.us/metal/green')
 })
 
+test('extra slashes and query strings are fine', () => {
+  const booru = new Danbooru('https://danbooru.donmai.us/withdrawal')
+  const { href } = booru.url('//////wireless?teal')
+  expect(href).toBe('https://danbooru.donmai.us/withdrawal/wireless?teal')
+})
+
 test('relative paths resolve', () => {
   const booru = new Danbooru('https://danbooru.donmai.us/bypass')
   const { href } = booru.url('../workforce')
