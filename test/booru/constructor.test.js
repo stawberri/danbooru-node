@@ -33,36 +33,6 @@ test('url with extra components', () => {
 })
 
 test('path with missing end slash', () => {
-  const booru = new Danbooru('http://sonohara.donmai.us/path')
-  expect(booru.url().href).toBe('http://sonohara.donmai.us/path/')
-})
-
-test('authentication and custom url change', () => {
-  const booru = new Danbooru()
-  expect(booru.auth()).toBeUndefined()
-  expect(booru.url().href).toBe('https://danbooru.donmai.us/')
-
-  booru.auth('transmit:compressing')
-  expect(booru.auth()).toBe('transmit')
-  expect(booru.url().href).toBe('https://danbooru.donmai.us/')
-
-  booru.auth('http://hijiribe.donmai.us/')
-  expect(booru.auth()).toBe('transmit')
-  expect(booru.url().href).toBe('http://hijiribe.donmai.us/')
-
-  booru.auth('http://deposit:models@sonohara.donmai.us/')
-  expect(booru.auth()).toBe('deposit')
-  expect(booru.url().href).toBe('http://sonohara.donmai.us/')
-
-  booru.auth('connecting:index')
-  expect(booru.auth()).toBe('connecting')
-  expect(booru.url().href).toBe('http://sonohara.donmai.us/')
-
-  booru.auth('https://danbooru.donmai.us/')
-  expect(booru.auth()).toBe('connecting')
-  expect(booru.url().href).toBe('https://danbooru.donmai.us/')
-
-  booru.auth(false)
-  expect(booru.auth()).toBeUndefined()
-  expect(booru.url().href).toBe('https://danbooru.donmai.us/')
+  const booru = new Danbooru('http://sonohara.donmai.us/violet')
+  expect(booru.url().href).toBe('http://sonohara.donmai.us/violet/')
 })
