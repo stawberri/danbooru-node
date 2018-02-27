@@ -2,29 +2,22 @@
   "name": "danbooru",
   "version": "3.0.0-dev",
   "description": "danbooru api wrapper",
-  "main": "lib",
-  "scripts": {
-    "lint": "eslint **/*.js",
-    "test": "jest"
+  "keywords": ["danbooru", "booru", "api", "image", "anime", "manga"],
+  "homepage": "https://github.com/stawberri/danbooru-node#readme",
+  "bugs": {
+    "url": "https://github.com/stawberri/danbooru-node/issues"
   },
+  "license": "MIT",
+  "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)",
+  "main": "lib",
   "repository": {
     "type": "git",
     "url": "git+https://stawberri@github.com/stawberri/danbooru-node.git"
   },
-  "keywords": [
-    "danbooru",
-    "booru",
-    "api",
-    "image",
-    "anime",
-    "manga"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/stawberri/danbooru-node/issues"
+  "scripts": {
+    "lint": "eslint **/*.js",
+    "test": "jest"
   },
-  "homepage": "https://github.com/stawberri/danbooru-node#readme",
-  "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)",
   "devDependencies": {
     "babel-eslint": "^8.2.2",
     "eslint": "^4.18.1",
