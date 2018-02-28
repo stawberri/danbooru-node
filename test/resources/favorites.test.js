@@ -4,7 +4,7 @@ const nock = require('nock')
 beforeEach(() => nock.cleanAll())
 
 test('favorites#index', async () => {
-  const params = { functionalitie: 'Auto Loan Account' }
+  const params = { functionalities: 'Auto Loan Account' }
   const reply = { input: 'middleware executive Granite' }
 
   const scope = nock('https://danbooru.donmai.us')
@@ -18,14 +18,14 @@ test('favorites#index', async () => {
 })
 
 test('favorites#create', async () => {
-  const params = { connecting: 'Netherlands Anticlimax Guilder' }
+  const post_id = 1799
   const reply = { magenta: 'payment programming override' }
 
   const scope = nock('https://danbooru.donmai.us')
-    .post('/favorites.json', params)
+    .post('/favorites.json', { post_id })
     .reply(200, reply)
 
-  const result = await new Danbooru().favorites_create(params)
+  const result = await new Danbooru().favorites_create(post_id)
   expect(result).toMatchObject(reply)
   expect(scope.isDone()).toBeTruthy()
 })
