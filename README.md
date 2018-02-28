@@ -58,12 +58,16 @@ const authenticatedBooru = new Danbooru(
 )
 ```
 
-## Getting an array of posts
+## Using this module
+
+Once I've fleshed out this module a bit more, I plan to create more complete documentation for it. For now, here are some things you can do.
+
+### Getting an array of posts
 
 Posts represent images on Danbooru. You can query them like this:
 
 ```js
-const posts = await booru.posts({limit: 100})
+const posts = await booru.posts({ limit: 100 })
 ```
 
 Your parameters are passed directly to Danbooru's API:
@@ -78,7 +82,7 @@ Your parameters are passed directly to Danbooru's API:
 You'll get an array of objects that looks like this:
 https://danbooru.donmai.us/posts.json
 
-## Getting a single post by its id
+### Getting a single post by its id
 
 You can also look up a single post using the same function:
 
@@ -88,7 +92,7 @@ const post = await booru.posts(2560676)
 
 You'll get an object: https://danbooru.donmai.us/posts/2560676.json
 
-## Getting an image
+### Getting an image
 
 Once you have a post, you'll likely want to extract its image. The most useful object properties for this purpose are:
 
@@ -96,7 +100,7 @@ Once you have a post, you'll likely want to extract its image. The most useful o
 * `large_file_url`: The full size version of the image. Might be the same as `file_url`.
 * `preview_file_url`: The tiny thumbnail used to represent this image.
 
-You can pass one of these values to `booru.url()` to generate a `URL` object, which you can turn into an absolute url by calling `url.toString()` method or just typecasting it.
+You can pass one of these values to `booru.url()` to generate a `URL` object, which you can turn into an absolute url by accessing `url.href` or just typecasting it.
 
 ```js
 const post = await booru.posts(2560676)
@@ -109,7 +113,7 @@ const request = http.get(url.href)
 const response = await fetch(url)
 ```
 
-## Manipulating favorites
+### Manipulating favorites
 
 Previous versions of this library have had functions to manipulate favorites for an authenticated user, so you can still do that with this version.
 
@@ -121,7 +125,7 @@ booru.favorites_create(2560676)
 booru.favorites_destroy(2560676)
 ```
 
-## Other endpoints
+### Other endpoints
 
 If you would like to do something I haven't added to this module yet, you can use these methods:
 
