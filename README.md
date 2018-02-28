@@ -130,15 +130,15 @@ booru.favorites_destroy(2560676)
 If you would like to do something I haven't added to this module yet, you can use these methods:
 
 ```js
-booru.get('/posts', { limit: 100 })
-booru.post('/favorites', { post_id: 2560676 })
-booru.put('/posts/2560676', {})
-booru.delete('/favorites/2560676')
+booru.get('/posts', queryStringParams)
+booru.post('/favorites', bodyParams)
+booru.put('/posts/2560676', bodyParams)
+booru.delete('/favorites/2560676', bodyParams)
 ```
 
 They all take two arguments. The first is a path, and the second is your parameters. They'll be sent as JSON for `POST`, `PUT`, and `DELETE` requests, and as part of a query string for `GET` requests.
 
-Your paths' leading slashes are optional, but don't add extensions or query strings. That'll happen automatically.
+Your paths' leading slashes are optional, but don't add extensions or query strings. These functions will automatically add `.json` and any specified query string properties to the end.
 
 ## Upgrading from previous versions
 
