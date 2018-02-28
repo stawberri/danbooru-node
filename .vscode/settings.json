@@ -5,6 +5,7 @@
     "badheaders",
     "booru",
     "danbooru",
+    "polyfill",
     "reqheaders",
     "truthy",
     "unvote"
