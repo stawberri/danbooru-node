@@ -1,15 +1,15 @@
-# danbooru
+# danbooru-node
 
 danbooru api wrapper
 
-[![npm install danbooru](https://img.shields.io/badge/npm%20install-danbooru-ff69b4.svg?style=for-the-badge)](https://npm.runkit.com/danbooru)
-[![npm](https://img.shields.io/npm/v/danbooru.svg?style=for-the-badge)](https://www.npmjs.com/package/danbooru)
-[![Travis](https://img.shields.io/travis/stawberri/danbooru-node.svg?style=for-the-badge)](https://travis-ci.org/stawberri/danbooru-node)
+[![npm install danbooru](https://img.shields.io/badge/npm%20install-danbooru-ff69b4.svg)](https://npm.runkit.com/danbooru)
+[![npm](https://img.shields.io/npm/v/danbooru.svg)](https://www.npmjs.com/package/danbooru)
+[![Travis](https://travis-ci.org/stawberri/danbooru-node.svg?branch=master)](https://travis-ci.org/stawberri/danbooru-node)
 
 This api wrapper allows you to access [Danbooru's API](https://danbooru.donmai.us/wiki_pages?title=help%3Aapi) with functions and promises.
 
 ```js
-const Danbooru = require('.')
+const Danbooru = require('danbooru')
 const booru = new Danbooru()
 
 // Perform a search for popular image posts
