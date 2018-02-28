@@ -1,18 +1,7 @@
 {
   "name": "danbooru",
-  "version": "2.0.3",
+  "version": "3.0.0-dev",
   "description": "danbooru api wrapper",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "tape test/*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://stawberri@github.com/stawberri/danbooru-node.git"
-  },
   "keywords": [
     "danbooru",
     "booru",
@@ -21,17 +10,30 @@
     "anime",
     "manga"
   ],
-  "license": "ISC",
+  "homepage": "https://github.com/stawberri/danbooru-node#readme",
   "bugs": {
     "url": "https://github.com/stawberri/danbooru-node/issues"
   },
-  "homepage": "https://github.com/stawberri/danbooru-node#readme",
-  "author": "Pudding <aideen@aideen.pw> (https://aideen.pw/)",
-  "devDependencies": {
-    "nock": "^9.0.13",
-    "tape": "^4.6.3"
+  "license": "MIT",
+  "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)",
+  "main": "lib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://stawberri@github.com/stawberri/danbooru-node.git"
   },
-  "engines": {
-    "node": ">=7"
+  "scripts": {
+    "lint": "eslint **/*.js",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.18.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "jest": "^22.4.2",
+    "jsdoc": "^3.5.5",
+    "nock": "^9.2.3",
+    "node-fetch-polyfill": "^2.0.6",
+    "prettier": "^1.11.0"
   }
 }
