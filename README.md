@@ -10,9 +10,9 @@ This api wrapper allows you to access [Danbooru's API](https://danbooru.donmai.u
 
 ```js
 const Danbooru = require('danbooru')
-const booru = new Danbooru()
 
 // Perform a search for popular image posts
+const booru = new Danbooru()
 booru.posts({ tags: 'rating:safe order:rank', limit: 100 }).then(posts => {
   // Select a random post from posts array
   const index = Math.floor(Math.random() * posts.length)
