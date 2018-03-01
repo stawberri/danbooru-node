@@ -142,6 +142,123 @@ Your paths' leading slashes are optional, but don't add extensions or query stri
 
 ## Upgrading from previous versions
 
+This module was completely rewritten for each major release before this one.
+
+Version 1 used callbacks, so upgrading involves completely rewriting your code.
+
+Version 2 used promises like the current version, so it should be possible to upgrade your code by swapping out some function calls. The biggest change involves the `Post` type being removed in favor of normal JavaScript objects.
+
+### Instantiation
+
+This module's class constructor now always takes a string.
+
+The Safebooru subclass has been removed. You can still specify `https://safebooru.donmai.us` manually.
+
+```js
+// Version 2
+const booru = new Danbooru('login', 'api_key')
+
+// Version 3
+const booru = new Danbooru('login:api_key')
+```
+
+```js
+// Version 2
+const booru = new Danbooru({
+  login: 'login',
+  api_key: 'api_key',
+  base: 'https://safebooru.donmai.us'
+})
+
+// Version 2 and 3
+const booru = new Danbooru('https://login:api_key@safebooru.donmai.us')
+```
+
+### Searching for posts
+
+Searching for posts now always takes a parameter object.
+
+```js
+// Version 2
+const posts = await booru.posts('rating:safe')
+
+// Version 2 and 3
+const posts = await booru.posts({ tags: 'rating:safe' })
+```
+
+### Fetching posts
+
+Getting individual posts is now performed via the main `.posts()` function
+
+```js
+// Version 2
+const post = await booru.posts.get(2560676)
+
+// Version 3
+const post = await booru.posts(2560676)
+```
+
+### Posts object
+
+There is no longer a posts object. These functions all return normal JavaScript objects that you can interact with normally.
+
+Many of the properties of the file object are now properties of the main post object. Please refer to [Getting an image](#Getting-an-image) above for details on how to download images.
+
+```js
+// Version 2
+post.raw
+
+// Version 3
+post
+```
+
+```js
+// Version 2
+post.tags
+
+// Version 3
+post.tag_string.split(' ')
+```
+
+```js
+// Version 2
+String(post.rating)
+
+// Version 3
+post.rating
+```
+
+### Favorites
+
+Working with your favorites works in nearly the same way, but with different functions.
+
+```js
+// Version 2 or 3
+const favorites = await booru.favorites()
+```
+
+```js
+// Version 2
+booru.favorites.add(2560676)
+booru.favorites.add(post)
+
+// Version 3
+booru.favorites_create(2560676)
+booru.favorites_create(post.id)
+```
+
+```js
+// Version 2
+booru.favorites.delete(2560676)
+booru.favorites.delete(post)
+
+// Version 3
+booru.favorites_destroy(2560676)
+booru.favorites_destroy(post.id)
+```
+
+### Using previous versions
+
 If you prefer older versions of this module, you can still install them with one of these commands, and find documentation for them on GitHub.
 
 * [danbooru-node v2.0.3](https://github.com/stawberri/danbooru-node/tree/v2.0.3): `npm install danbooru@2`
