@@ -29,7 +29,16 @@ booru.posts({ tags: 'rating:safe order:rank' }).then(posts => {
 })
 ```
 
-## Danbooru class
+Jump to section:&#x2003;&#x2003;
+[Using this module](#using-this-module)
+&#x2003;•&#x2003;
+[Upgrading from previous versions](#upgrading-from-previous-versions)
+
+## Using this module
+
+Once I've fleshed out this module a bit more, I plan to create more complete documentation for it. For now, here are some things you can do.
+
+### Danbooru class
 
 This module exports a `Danbooru` class. Calling its constructor with no argument allows you to make unauthenticated requests to https://danbooru.donmai.us/.
 
@@ -57,10 +66,6 @@ const authenticatedBooru = new Danbooru(
   `https://${login}:${key}@sonohara.donmai.us`
 )
 ```
-
-## Using this module
-
-Once I've fleshed out this module a bit more, I plan to create more complete documentation for it. For now, here are some things you can do.
 
 ### Getting an array of posts
 
@@ -141,6 +146,123 @@ They all take two arguments. The first is a path, and the second is your paramet
 Your paths' leading slashes are optional, but don't add extensions or query strings. These functions will automatically add `.json` and any specified query string properties to the end.
 
 ## Upgrading from previous versions
+
+This module was completely rewritten for each major release before this one.
+
+Version 1 used callbacks, so upgrading involves completely rewriting your code.
+
+Version 2 used promises like the current version does, so it should be possible to upgrade your code by swapping out some function calls, though you will need to rewrite code involving the old `Post` type.
+
+### Instantiation
+
+This module's class constructor now always takes a string.
+
+The Safebooru subclass has been removed. You can still specify `https://safebooru.donmai.us` manually.
+
+```js
+// Version 2
+const booru = new Danbooru('login', 'api_key')
+
+// Version 3
+const booru = new Danbooru('login:api_key')
+```
+
+```js
+// Version 2
+const booru = new Danbooru({
+  login: 'login',
+  api_key: 'api_key',
+  base: 'https://safebooru.donmai.us'
+})
+
+// Version 2 and 3
+const booru = new Danbooru('https://login:api_key@safebooru.donmai.us')
+```
+
+### Searching for posts
+
+Searching for posts now always takes a parameter object.
+
+```js
+// Version 2
+const posts = await booru.posts('rating:safe')
+
+// Version 2 and 3
+const posts = await booru.posts({ tags: 'rating:safe' })
+```
+
+### Fetching posts
+
+Getting individual posts is now performed via the main `.posts()` function
+
+```js
+// Version 2
+const post = await booru.posts.get(2560676)
+
+// Version 3
+const post = await booru.posts(2560676)
+```
+
+### Posts object
+
+There is no longer a posts object. These functions all return normal JavaScript objects that you can interact with normally.
+
+Please refer to [Getting an image](#getting-an-image) above for details on how to download images. Many of the properties on the old `.file` object can still be accessed as part of the post data object.
+
+```js
+// Version 2
+post.raw
+
+// Version 3
+post
+```
+
+```js
+// Version 2
+post.tags
+
+// Version 3
+post.tag_string.split(' ')
+```
+
+```js
+// Version 2
+String(post.rating)
+
+// Version 3
+post.rating
+```
+
+### Favorites
+
+Functions that work with favorites have been renamed.
+
+```js
+// Version 2 or 3
+const favorites = await booru.favorites()
+```
+
+```js
+// Version 2
+booru.favorites.add(2560676)
+booru.favorites.add(post)
+
+// Version 3
+booru.favorites_create(2560676)
+booru.favorites_create(post.id)
+```
+
+```js
+// Version 2
+booru.favorites.delete(2560676)
+booru.favorites.delete(post)
+
+// Version 3
+booru.favorites_destroy(2560676)
+booru.favorites_destroy(post.id)
+```
+
+### Using previous versions
 
 If you prefer older versions of this module, you can still install them with one of these commands, and find documentation for them on GitHub.
 
