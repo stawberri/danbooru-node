@@ -8,6 +8,8 @@ danbooru api wrapper
 
 This api wrapper allows you to access [Danbooru's API](https://danbooru.donmai.us/wiki_pages?title=help%3Aapi) with functions and promises.
 
+It works in Node.js and bundled for browsers where fetch is available.
+
 ```js
 const Danbooru = require('danbooru')
 
