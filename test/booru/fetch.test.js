@@ -2,12 +2,16 @@ const Danbooru = require('../..')
 const nock = require('nock')
 const { fetch } = require('../../lib/requires.js')
 
-jest.mock('../../lib/requires.js', () => ({
-  ...require.requireActual('../../lib/requires.js'),
-  http: undefined,
-  https: undefined,
-  fetch: jest.fn(require('node-fetch-polyfill'))
-}))
+jest.mock('../../lib/requires.js', () => {
+  const requires = require.requireActual('../../lib/requires.js')
+
+  delete requires.http
+  delete requires.https
+
+  requires.fetch = jest.fn(require('node-fetch-polyfill'))
+
+  return requires
+})
 
 beforeEach(() => {
   nock.cleanAll()
