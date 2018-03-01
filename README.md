@@ -29,7 +29,16 @@ booru.posts({ tags: 'rating:safe order:rank' }).then(posts => {
 })
 ```
 
-## Danbooru class
+Jump to section:&#x2003;&#x2003;
+[Using this module](#using-this-module)
+&#x2003;•&#x2003;
+[Upgrading from previous versions](#upgrading-from-previous-versions)
+
+## Using this module
+
+Once I've fleshed out this module a bit more, I plan to create more complete documentation for it. For now, here are some things you can do.
+
+### Danbooru class
 
 This module exports a `Danbooru` class. Calling its constructor with no argument allows you to make unauthenticated requests to https://danbooru.donmai.us/.
 
@@ -57,10 +66,6 @@ const authenticatedBooru = new Danbooru(
   `https://${login}:${key}@sonohara.donmai.us`
 )
 ```
-
-## Using this module
-
-Once I've fleshed out this module a bit more, I plan to create more complete documentation for it. For now, here are some things you can do.
 
 ### Getting an array of posts
 
@@ -146,7 +151,7 @@ This module was completely rewritten for each major release before this one.
 
 Version 1 used callbacks, so upgrading involves completely rewriting your code.
 
-Version 2 used promises like the current version, so it should be possible to upgrade your code by swapping out some function calls. The biggest change involves the `Post` type being removed in favor of normal JavaScript objects.
+Version 2 used promises like the current version does, so it should be possible to upgrade your code by swapping out some function calls, though you will need to rewrite code involving the old `Post` type.
 
 ### Instantiation
 
@@ -202,7 +207,7 @@ const post = await booru.posts(2560676)
 
 There is no longer a posts object. These functions all return normal JavaScript objects that you can interact with normally.
 
-Many of the properties of the file object are now properties of the main post object. Please refer to [Getting an image](#Getting-an-image) above for details on how to download images.
+Please refer to [Getting an image](#getting-an-image) above for details on how to download images. Many of the properties on the old `.file` object can still be accessed as part of the post data object.
 
 ```js
 // Version 2
@@ -230,7 +235,7 @@ post.rating
 
 ### Favorites
 
-Working with your favorites works in nearly the same way, but with different functions.
+Functions that work with favorites have been renamed.
 
 ```js
 // Version 2 or 3
