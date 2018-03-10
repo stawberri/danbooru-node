@@ -1,5 +1,7 @@
+/*
+
+!lib
+!build
+
+lib/**/*.browser.js
 *.test.js
-*.config.js
-.babel*
-.*.yaml
-.*.yml
