@@ -1,6 +1,4 @@
 {
-  "editor.formatOnSave": true,
-  "eslint.autoFixOnSave": true,
   "cSpell.words": [
     "badheaders",
     "booru",
