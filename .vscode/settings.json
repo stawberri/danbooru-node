@@ -1,6 +1,4 @@
 {
-  "editor.formatOnSave": true,
-  "eslint.autoFixOnSave": true,
   "cSpell.words": [
     "badheaders",
     "booru",
@@ -8,6 +6,7 @@
     "danbooru's",
     "polyfill",
     "postpublish",
+    "precommit",
     "reqheaders",
     "truthy",
     "unvote"

@@ -1,1 +1,6 @@
-module.exports = { transform: {} }
+module.exports = {
+  transform: {},
+  moduleNameMapper: {
+    '<rootDir>': '<rootDir>'
+  }
+}

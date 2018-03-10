@@ -4,4 +4,5 @@
 !build
 
 lib/**/*.browser.js
+__tests__
 *.test.js
