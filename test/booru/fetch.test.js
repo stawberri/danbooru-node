@@ -1,9 +1,5 @@
-const Danbooru = require('../..')
-const nock = require('nock')
-const { fetch } = require('../../lib/requires.node.js')
-
 jest.mock('../../lib/requires.node.js', () => {
-  const requires = require.requireActual('../../lib/requires.node.js')
+  const requires = { ...require.requireActual('../../lib/requires.node.js') }
 
   delete requires.http
   delete requires.https
@@ -12,6 +8,10 @@ jest.mock('../../lib/requires.node.js', () => {
 
   return requires
 })
+
+const Danbooru = require('../..')
+const nock = require('nock')
+const { fetch } = require('../../lib/requires.node.js')
 
 beforeEach(() => {
   nock.cleanAll()

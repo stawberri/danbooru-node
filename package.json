@@ -2,14 +2,7 @@
   "name": "danbooru",
   "version": "3.0.4",
   "description": "danbooru api wrapper",
-  "keywords": [
-    "danbooru",
-    "booru",
-    "api",
-    "image",
-    "anime",
-    "manga"
-  ],
+  "keywords": ["danbooru", "booru", "api", "image", "anime", "manga"],
   "homepage": "https://github.com/stawberri/danbooru-node#readme",
   "bugs": {
     "url": "https://github.com/stawberri/danbooru-node/issues"
@@ -24,6 +17,7 @@
   },
   "scripts": {
     "prepublishOnly": "babel lib -d build",
+    "postpublish": "rimraf build",
     "lint": "eslint **/*.js",
     "test": "jest"
   },
@@ -38,6 +32,7 @@
     "jest": "^22.4.2",
     "nock": "^9.2.3",
     "node-fetch-polyfill": "^2.0.6",
-    "prettier": "^1.11.1"
+    "prettier": "^1.11.1",
+    "rimraf": "^2.6.2"
   }
 }
