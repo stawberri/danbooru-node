@@ -1,4 +1,4 @@
-const Danbooru = require('../..')
+const Danbooru = require('<rootDir>')
 
 test('authentication and custom url change', () => {
   const booru = new Danbooru()

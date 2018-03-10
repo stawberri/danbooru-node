@@ -9,7 +9,7 @@ jest.mock('../../lib/requires.node.js', () => {
   return requires
 })
 
-const Danbooru = require('../..')
+const Danbooru = require('<rootDir>')
 const nock = require('nock')
 const { fetch } = require('../../lib/requires.node.js')
 

@@ -1,4 +1,4 @@
-const Danbooru = require('../..')
+const Danbooru = require('<rootDir>')
 
 test('default authentication', () => {
   const booru = new Danbooru()
