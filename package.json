@@ -1,6 +1,6 @@
 {
   "name": "danbooru",
-  "version": "3.0.5",
+  "version": "3.0.6-dev.0",
   "description": "danbooru api wrapper",
   "keywords": [
     "danbooru",
