@@ -103,8 +103,8 @@ You'll get an object: https://danbooru.donmai.us/posts/2560676.json
 
 Once you have a post, you'll likely want to extract its image. The most useful object properties for this purpose are:
 
-* `file_url`: The image you get by default when you manually browse on Danbooru.
-* `large_file_url`: The full size version of the image. Might be the same as `file_url`.
+* `file_url`: The post image. For small images, this is the same as `large_file_url`.
+* `large_file_url`: The image you see by default on Danbooru, which may be scaled down.
 * `preview_file_url`: The tiny thumbnail used to represent this image.
 
 You can pass one of these values to `booru.url()` to generate a `URL` object, which you can turn into an absolute url by accessing `url.href` or just typecasting it.
