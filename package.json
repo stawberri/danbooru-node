@@ -3,14 +3,16 @@
   "version": "4.0.0-dev",
   "description": "Search Danbooru easily",
   "main": ".",
+  "browser": "./browser",
+  "files": [
+    "/index.*",
+    "/browser.*",
+    "/lib"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "tsc"
   },
-  "files": [
-    "/index.*",
-    "/lib"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stawberri/danbooru-node.git"
