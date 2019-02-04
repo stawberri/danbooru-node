@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "tsc"
+    "prepare": "tsc",
+    "clean": "rm -rf index.* browser.* lib"
   },
   "repository": {
     "type": "git",
