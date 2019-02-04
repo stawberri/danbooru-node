@@ -1,3 +1,3 @@
-import { createDanbooru } from "./lib";
-import { browser } from "./lib/browser";
-export = createDanbooru(browser);
+import "./lib/browser";
+import { Danbooru } from "./lib";
+export = Danbooru;

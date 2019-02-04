@@ -1,3 +1,3 @@
-import { createDanbooru } from "./lib";
-import { node } from "./lib/node";
-export = createDanbooru(node);
+import "./lib/node";
+import { Danbooru } from "./lib";
+export = Danbooru;

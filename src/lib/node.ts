@@ -1,3 +1,3 @@
-import { Environment } from ".";
+import { setEnvironment } from "./environment";
 
-export const node: Environment = {};
+setEnvironment({});

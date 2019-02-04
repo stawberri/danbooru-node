@@ -1,7 +1,3 @@
-type Danbooru = {};
+import { environment } from "./environment";
 
-export interface Environment {}
-
-export function createDanbooru({  }: Environment): Danbooru {
-  return {};
-}
+export class Danbooru {}
