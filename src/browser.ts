@@ -1,3 +1,5 @@
 import { danbooruFactory } from "./lib";
 
-export = danbooruFactory({});
+export = danbooruFactory({
+  URL: self.URL
+});
