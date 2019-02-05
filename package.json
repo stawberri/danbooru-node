@@ -1,7 +1,7 @@
 {
   "name": "danbooru",
   "version": "4.0.0-dev",
-  "description": "Search Danbooru easily",
+  "description": "Search Danbooru easily.",
   "main": ".",
   "browser": "./browser",
   "files": [

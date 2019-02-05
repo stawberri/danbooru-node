@@ -1,3 +1,3 @@
 # danbooru
 
-Search Danbooru easily
+Search Danbooru easily.
