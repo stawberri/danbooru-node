@@ -1,3 +1,3 @@
-import "./lib/browser";
-import { Danbooru } from "./lib";
-export = Danbooru;
+import { danbooruFactory } from "./lib";
+
+export = danbooruFactory({});
