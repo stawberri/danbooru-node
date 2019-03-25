@@ -1,6 +1,6 @@
-import { danbooruFactory } from "./lib";
+import { createConstructor } from "./lib";
 import { URL } from "url";
 
-export = danbooruFactory({
+export = createConstructor({
   URL
 });
