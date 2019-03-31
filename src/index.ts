@@ -1,3 +1,6 @@
-import { createDanbooru } from "./lib";
-import { node } from "./lib/node";
-export = createDanbooru(node);
+import { createConstructor } from "./lib";
+import { URL } from "url";
+
+export = createConstructor({
+  URL
+});

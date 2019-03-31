@@ -1,3 +1,5 @@
-import { createDanbooru } from "./lib";
-import { browser } from "./lib/browser";
-export = createDanbooru(browser);
+import { createConstructor } from "./lib";
+
+export = createConstructor({
+  URL: self.URL
+});
