@@ -27,7 +27,7 @@ interface Options {
   parameters?: object;
 }
 
-interface Constructor {
+export interface Constructor {
   /**
    * danbooru — Search Danbooru easily.
    *
