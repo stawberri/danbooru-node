@@ -18,6 +18,13 @@ interface Options {
    * Danbooru account api_key.
    */
   api_key?: string;
+
+  /**
+   * Default request parameters.
+   *
+   * These parameters will be included with all requests.
+   */
+  parameters?: object;
 }
 
 interface Constructor {
@@ -34,38 +41,41 @@ interface Constructor {
 }
 
 export const createConstructor = ({ URL }: Environment): Constructor => {
-  return function Danbooru({
-    server = "https://danbooru.donmai.us",
-    login,
-    api_key
-  }: Options = {}): Danbooru {
-    const [cleanServer, authServer] = serverURLs(server, login, api_key);
+  return function Danbooru(options: Options = {}): Danbooru {
+    const [server, parameters]: [string, object] = handleOptions(options);
 
     const danbooru = () => {};
 
-    danbooru.toString = () => cleanServer;
+    danbooru.toString = () => server;
 
     return danbooru;
   };
 
-  function serverURLs(
-    server: string,
-    username?: string,
-    password?: string
-  ): [string, string] {
-    const base = new URL(server);
-    base.hash = "";
-    base.search = "";
-    base.pathname = base.pathname.replace(/\/+$/, "");
+  function handleOptions({
+    server = "https://danbooru.donmai.us",
+    login,
+    api_key,
+    parameters = {}
+  }: Options): [string, object] {
+    const baseURL = new URL(server);
+    baseURL.hash = "";
+    baseURL.search = "";
+    baseURL.pathname = baseURL.pathname.replace(/\/+$/, "");
 
-    const clean = new URL(`${base}`);
-    clean.username = "";
-    clean.password = "";
+    const cleanURL = new URL(`${baseURL}`);
+    cleanURL.username = "";
+    cleanURL.password = "";
 
-    const auth = new URL(`${base}`);
-    if (username) auth.username = username;
-    if (password) auth.password = password;
+    const loginParameters = {
+      login: baseURL.username || login,
+      api_key: baseURL.password || api_key
+    };
 
-    return [`${clean}`, `${password}`];
+    const defaultParameters = {
+      ...loginParameters,
+      ...parameters
+    };
+
+    return [`${cleanURL}`, defaultParameters];
   }
 };
