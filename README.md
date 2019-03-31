@@ -132,6 +132,8 @@ booru.favorites_create(2560676)
 booru.favorites_destroy(2560676)
 ```
 
+Please note that due to Danbooru's security settings, this function may fail in browsers.
+
 ### Other endpoints
 
 If you would like to do something I haven't added to this module yet, you can use these methods:
@@ -146,6 +148,8 @@ booru.delete('/favorites/2560676', bodyParams)
 They all take two arguments. The first is a path, and the second is your parameters. They'll be sent as JSON for `POST`, `PUT`, and `DELETE` requests, and as part of a query string for `GET` requests.
 
 Your paths' leading slashes are optional, but don't add extensions or query strings. These functions will automatically add `.json` and any specified query string properties to the end.
+
+Due to Danbooru's security settings, custom `GET` requests should work in browsers, but other methods may fail.
 
 ## Upgrading from previous versions
 
