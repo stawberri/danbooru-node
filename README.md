@@ -5,6 +5,7 @@ danbooru api wrapper
 [![npm install danbooru](https://img.shields.io/badge/npm%20install-danbooru-ff69b4.svg)](https://npm.runkit.com/danbooru)
 [![npm](https://img.shields.io/npm/v/danbooru.svg)](https://www.npmjs.com/package/danbooru)
 [![Travis](https://travis-ci.org/stawberri/danbooru-node.svg?branch=master)](https://travis-ci.org/stawberri/danbooru-node)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 This api wrapper allows you to access [Danbooru's API](https://danbooru.donmai.us/wiki_pages?title=help%3Aapi) with functions and promises.
 
